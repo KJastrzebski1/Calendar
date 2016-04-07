@@ -5,171 +5,197 @@
  */
 
 $(window).load(function () {
-    /*
-     date store today date.
-     d store today date.
-     m store current month.
-     y store current year.
-     */
-    var date = new Date();
-    var d = date.getDate();
-    var m = date.getMonth();
-    var y = date.getFullYear();
+   
+    data = []; //data used in ajax
+    
+    calendar_id = 0; // calendar_id id, 0 -> not logged in
+    calendar; // variable for calendar
+    admin = true;
+    $.ajax({
+        'method': 'POST',
+        'url': ajax_object.ajax_url,
+        'data': {
+            "action": "get_user"
+        }
+    })
+            .done(function (response) {
+                //if (response != 1)
+                calendar_ids = response['id'];
+                calendar_names = response['names'];
+                super_admin = response['admin'];
+                //if (super_admin) {
 
-    /*
-     Initialize fullCalendar and store into variable.
-     Why in variable?
-     Because doing so we can use it inside other function.
-     In order to modify its option later.
-     */
-
-    var calendar = $('#calendar').fullCalendar(
-            {
-                /*
-                 header option will define our calendar header.
-                 left define what will be at left position in calendar
-                 center define what will be at center position in calendar
-                 right define what will be at right position in calendar
-                 */
-                header:
+                    var select = $("<select id='admin-select'></select>");
+                    $('#calendar').before(select);
+                    $('#admin-select').css({'display': 'block'});
+                    for (i = 0; i < calendar_ids.length; i++) {
+                        $('#admin-select').prepend("<option value='" + calendar_ids[i] + "'>"+ calendar_names[i]+"</option>");
+                    }
+                    calendar_id = calendar_ids[calendar_ids.length-1];
+                    
+                //}else{
+                 //   calendar_id = response['id'];
+                //}
+                console.log(response);
+                admin = true;
+                calendar = $('#calendar').fullCalendar(
                         {
-                            left: 'prev,next today',
-                            center: 'title',
-                            right: 'month,agendaWeek,agendaDay'
-                        },
-                /*
-                 defaultView option used to define which view to show by default,
-                 for example we have used agendaWeek.
-                 */
-                defaultView: 'month',
-                /*
-                 selectable:true will enable user to select datetime slot
-                 selectHelper will add helpers for selectable.
-                 */
-                selectable: true,
-                selectHelper: true,
-                /*
-                 when user select timeslot this option code will execute.
-                 It has three arguments. Start,end and allDay.
-                 Start means starting time of event.
-                 End means ending time of event.
-                 allDay means if events is for entire day or not.
-                 */
-                select: function (start, end, allDay)
-                {
-                    /*
-                     after selection user will be promted for enter title for event.
-                     */
-                    var title = prompt('Event Title:');
-                    /*
-                     if title is enterd calendar will add title and event into fullCalendar.
-                     */
-                    if (title)
-                    {
-                        calendar.fullCalendar('renderEvent',
-                                {
-                                    title: title,
-                                    start: start,
-                                    end: end,
-                                    allDay: allDay
-                                },
-                                true // make the event "stick"
-                                );
-                    }
-                    calendar.fullCalendar('unselect');
-                },
-                dayClick: function () {
-                    calendar.fullCalendar('changeView', 'agendaDay');
-                },
-                /*
-                 editable: true allow user to edit events.
-                 */
-                editable: true,
-                /*
-                 events is the main option for calendar.
-                 for demo we have added predefined events in json object.
-                 */
-                events: [
-                    {
-                        title: 'All Day Event',
-                        start: new Date(y, m, 1)
-                    },
-                    {
-                        title: 'Long Event',
-                        start: new Date(y, m, d - 5),
-                        end: new Date(y, m, d - 2)
-                    },
-                    {
-                        id: 999,
-                        title: 'Repeating Event',
-                        start: new Date(y, m, d - 3, 16, 0),
-                        allDay: false
-                    },
-                    {
-                        id: 999,
-                        title: 'Repeating Event',
-                        start: new Date(y, m, d + 4, 16, 0),
-                        allDay: false
-                    },
-                    {
-                        title: 'Meeting',
-                        start: new Date(y, m, d, 10, 30),
-                        allDay: false
-                    },
-                    {
-                        title: 'Lunch',
-                        start: new Date(y, m, d, 12, 0),
-                        end: new Date(y, m, d, 14, 0),
-                        allDay: false
-                    },
-                    {
-                        title: 'Birthday Party',
-                        start: new Date(y, m, d + 1, 19, 0),
-                        end: new Date(y, m, d + 1, 22, 30),
-                        allDay: false
-                    },
-                    {
-                        title: 'Click for Google',
-                        description: 'This is some google event',
-                        start: new Date(y, m, 28),
-                        end: new Date(y, m, 29),
-                        url: 'http://google.com/'
-                    }
-                ],
-                eventRender: function (event, element) {
-                    element.append(event.description);
-                },
-                eventAfterAllRender: function () {
+                            header:
+                                    {
+                                        left: 'prev,next',
+                                        center: 'title',
+                                        right: 'month,agendaWeek,agendaDay'
+                                    },
+                            defaultView: 'month',
+                            selectable: true,
+                            selectHelper: true,
+                            select: function (start, end)
+                            {
+                                if (admin) {
+                                    var title = prompt('Event Title:');
 
-                }
+                                    if (title)
+                                    {
+                                        new_event = {
+                                            title: title,
+                                            start: start,
+                                            end: end
+                                        };
+
+
+                                        updateEvents(new_event).done(function (response) {
+                                            new_event['post_id'] = response;
+                                            console.log(new_event['post_id']);
+                                            calendar.fullCalendar('renderEvent',
+                                                    new_event,
+                                                    true // make the event "stick"
+                                                    );
+
+                                        });
+
+                                    }
+                                }
+                                calendar.fullCalendar('unselect');
+
+                            },
+                            editable: true,
+                            eventRender: function (event, element) {
+                                element.append(event.description);
+                            },
+                            eventDrop: function (event) {
+                                if (admin) {
+                                    console.log("Drop:" + event.start.format());
+                                    updateEvents(event);
+                                }
+                            },
+                            eventResize: function (event) {
+                                if (admin) {
+                                    console.log("Resize end: " + event.end.format());
+                                    updateEvents(event);
+                                }
+                            },
+                            eventAfterAllRender: function () {
+
+                            },
+                            eventClick: function (calEvent) {
+                                if (admin) {
+
+                                    $("#my_meta_box_ds").val(calEvent.start.format("YYYY-MM-DD"));
+                                    $("#my_meta_box_ts").val(calEvent.start.format("HH:mm"));
+                                    $("#my_meta_box_de").val(calEvent.end.format("YYYY-MM-DD"));
+                                    $("#my_meta_box_te").val(calEvent.end.format("HH:mm"));
+                                    $('#dialog').dialog({
+                                        title: calEvent.title,
+                                        width: 350,
+                                        buttons: [
+                                            {
+                                                text: "OK",
+                                                click: function () {
+                                                    $(this).dialog("close");
+                                                }
+                                            },
+                                            {
+                                                text: "DEL",
+                                                click: function () {
+                                                    calendar.fullCalendar('removeEvents', calEvent._id);
+                                                    //console.log(calEvent);
+                                                    $.post(ajax_object.ajax_url, {"data": calEvent.post_id, "action": "delete_event"}, function (response) {
+                                                        console.log(response);
+
+                                                    });
+                                                    $(this).dialog("close");
+                                                }
+                                            }
+                                        ]
+                                    });
+                                }
+                            }
+                        });
+                        getEvents();
+                $("#admin-select").change(function () {
+                    calendar.fullCalendar('removeEvents');
+                    calendar_id = $("#admin-select option:selected").val();
+                    console.log(calendar_id );
+                    getEvents();
+                });
             });
-    events = calendar.fullCalendar('clientEvents');
-    console.log(calendar.fullCalendar('clientEvents'));
-    data = [];
-    for (var i = 0, len = events.length; i < len; i++) {
+
+    function getEvents() {
+        $.post(ajax_object.ajax_url, {"data": calendar_id , "action": "get_events"}, function (response) {
+            console.log(response);
+            for (i = 0; i < response.length; i++) {
+                calendar.fullCalendar('renderEvent',
+                        {
+                            'post_id': response[i].ID,
+                            'title': response[i].title,
+                            'start': response[i].start.date,
+                            'description': response[i].description,
+                            'end': response[i].end.date
+                        },
+                        true
+                        );
+
+            }
+        });
+    }
+    function updateEvents(events) {
+
         var endDate = null;
         var desc = null;
-            if (events[i]['end'])
-                endDate = events[i]['end']['_d'];
-            if( events[i]['description']){
-                desc = events[i]['description'];
-            }
-        data[i] =
-                {
-                    'title': events[i]['title'],
-                    'allDay': events[i]['allDay'],
-                    'id': events[i]['_id'],
-                    'start': events[i]['start']['_d'],
-                    'end': endDate,
-                    'description' : desc
-                };
-                
-    }
+        post_id = null;
+        if (events['end'])
+            endDate = events['end'].format();
+        if (events['description']) {
+            desc = events['description'];
+        }
+        if (events['post_id']) {
+            post_id = events['post_id'];
+        }
 
-    console.log(data);
-    
-    $.post(ajax_object.ajax_url, {"data":data, "action": "my_action"}, function(response) {
-		console.log('Got this from the server: ' + response);
-	});
+        data2 =
+                {
+                    'post_id': post_id,
+                    'title': events['title'],
+                    'allDay': events['allDay'],
+                    'id': events['_id'],
+                    'start': events['start'].format(),
+                    'end': endDate,
+                    'description': desc
+                };
+
+        return ($.ajax({
+            'method': "POST",
+            'url': ajax_object.ajax_url,
+            'data': {
+                "data": data2,
+                "action": "update_event"
+            },
+            'success': function (response) {
+                console.log(response);
+                post_id = response;
+
+            }}));
+
+    }
 });
 

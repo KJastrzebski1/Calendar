@@ -8,3 +8,6 @@ and open the template in the editor.
     Author     : polcode
 */
 
+#dialog{
+    display: none;
+}
