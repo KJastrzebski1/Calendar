@@ -20,7 +20,7 @@ function alt_calendar_create_menu() {
 
 function register_alt_calendar_settings() {
 	//register our settings
-	register_setting( 'alt-calendar-settings-group', 'new_option_name' );
+	register_setting( 'alt-calendar-settings-group', 'default_calendar' );
 	register_setting( 'alt-calendar-settings-group', 'some_other_option' );
 	register_setting( 'alt-calendar-settings-group', 'option_etc' );
 }
@@ -35,8 +35,15 @@ function alt_calendar_settings_page() {
     <?php do_settings_sections( 'alt-calendar-settings-group' ); ?>
     <table class="form-table">
         <tr valign="top">
-        <th scope="row">New Option Name</th>
-        <td><input type="text" name="new_option_name" value="<?php echo esc_attr( get_option('new_option_name') ); ?>" /></td>
+        <th scope="row">Chose default calendar</th>
+        <select name="default_calendar" >
+            <?php 
+            $taxonomies = get_terms('alt-calendar');
+            foreach($taxonomies as $tax){
+                echo '<option value='.$tax->term_id.'>'.$tax->name.'</option>';
+            }
+            ?>
+            </select>
         </tr>
          
         <tr valign="top">

@@ -1,8 +1,8 @@
 <?php
+
 /*
  *  Ajax functions
  */
-
 
 function delete_event_callback() {
     $post_id = $_POST['data'];
@@ -19,30 +19,39 @@ function check_admin_callback() {
     }
     wp_die();
 }
-function get_calendars_callback(){
+
+function get_calendars_callback() {
     
 }
+
 function get_user_callback() {
     $current_user = wp_get_current_user();
-    $id = $current_user->ID;
+    $user_id = $current_user->ID;
     $taxonomies = get_terms('alt-calendar');
     $names = [];
     $id = [];
     $admin = 0;
     $t_id = [];
-    
-    foreach ($taxonomies as $cat){
-        $names[] = $cat->name;
-        $id[] = $cat->term_id;
-    }
-    /*if (current_user_can('administrator')) {
-        $admin = 1;
-        $all_users = get_users(array('search'=> '*'));
-        foreach ($all_users as $user){
-            $t_id[] = $user->ID;
+    if ($user_id) {
+        foreach ($taxonomies as $cat) {
+            $names[] = $cat->name;
+            $id[] = $cat->term_id;
         }
-        $id = $t_id;
-    }*/
+        if (current_user_can('administrator')) {
+            $admin = 1;
+        }
+    }
+    else{
+        $names[0] = $taxonomies[0]->name;
+        $id[0] = $taxonomies[0]->term_id;
+    }
+    /*
+      $all_users = get_users(array('search'=> '*'));
+      foreach ($all_users as $user){
+      $t_id[] = $user->ID;
+      }
+      $id = $t_id;
+      } */
     $response = [
         "admin" => $admin,
         "id" => $id,
@@ -71,20 +80,20 @@ function get_events_callback() {
 // The Loop
     if ($the_query->have_posts()) {
         $i = 0;
-        
-        
+
+
         while ($the_query->have_posts()) {
-            
+
             $the_query->the_post();
             $post_id = get_the_ID();
             //if ($calendar_id == get_post_meta($post_id, 'calendar_id', true)) {
-                $response[$i]['ID'] = $post_id;
-                $response[$i]['title'] = get_the_title();
-                $response[$i]['description'] = get_the_content();
-                $response[$i]['start'] = get_post_meta($post_id, 'start', true);
-                $response[$i]['end'] = get_post_meta($post_id, 'end', true);
+            $response[$i]['ID'] = $post_id;
+            $response[$i]['title'] = get_the_title();
+            $response[$i]['description'] = get_the_content();
+            $response[$i]['start'] = get_post_meta($post_id, 'start', true);
+            $response[$i]['end'] = get_post_meta($post_id, 'end', true);
 
-                $i++;
+            $i++;
             //}
         }
     } else {
@@ -98,7 +107,7 @@ function get_events_callback() {
 function update_event_callback() {
     global $wpdb;
     $event = $_POST["data"];
-    
+    $calendar_id = $_POST["calendar_id"];
     $current_user = wp_get_current_user();
     $user_id = $current_user->ID;
     //$calendar_id = 
@@ -145,7 +154,7 @@ function update_event_callback() {
         update_post_meta($post_id, 'end', $end);
         update_post_meta($post_id, 'event_id', esc_attr($id));
         update_post_meta($post_id, 'user_id', $user_id);
-        
+        wp_set_object_terms($post_id, intval($calendar_id), 'alt-calendar');
     }
 
     //header('Content-Type: application/json');

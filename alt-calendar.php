@@ -36,6 +36,8 @@ function alt_enqueue_scripts() {
     wp_enqueue_style('event_panel', plugins_url('assets/css/event.css', __FILE__));
     wp_enqueue_script('jQuery_lib', plugins_url('fullcalendar/lib/jquery.min.js', __FILE__));
     wp_enqueue_script('momentjs', plugins_url('fullcalendar/lib/moment.min.js', __FILE__), ['jQuery_lib']);
+    wp_enqueue_script('momentjs_tz', 'http://momentjs.com/downloads/moment-timezone.min.js', ['momentjs']);
+    //wp_enqueue_script('momentjs-timezone', 'http://momentjs.com/downloads/moment-timezone-with-data-2010-2020.min.js', ['momentjs_tz']);
     wp_enqueue_script('fullCalendar_lib', plugins_url('fullcalendar/fullcalendar.min.js', __FILE__), ['momentjs']);
 
     wp_enqueue_script('jquery-ui', plugins_url('fullcalendar/lib/jquery-ui.min.js', __FILE__), ['jQuery_lib']);
@@ -96,6 +98,7 @@ add_action('wp_ajax_check_admin', 'check_admin_callback');
 add_action('wp_ajax_nopriv_check_admin', 'check_admin_callback');
 add_action('wp_ajax_delete_event', 'delete_event_callback');
 add_action('wp_ajax_get_user', 'get_user_callback');
+add_action('wp_ajax_nopriv_get_user', 'get_user_callback');
 
 
 
