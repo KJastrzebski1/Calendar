@@ -65,7 +65,10 @@ function alt_plugin_setup() {
         <label>End</label>
         <input type="date" id="my_meta_box_de" name="date_end" value="" /><input type="time" id="my_meta_box_te" name="time_end" value="" />
         </p>
+        <label>Description</label>
+        <textarea rows="3" cols="40" id="my_meta_box_desc" name="my_meta_box_desc"></textarea>
         </form>
+        
         </div>'
         ,
         'post_type' => 'page'

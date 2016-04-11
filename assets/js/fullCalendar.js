@@ -75,6 +75,7 @@ $(window).load(function () {
                                     $("#my_meta_box_ts").val(calEvent.start.format("HH:mm"));
                                     $("#my_meta_box_de").val(calEvent.end.format("YYYY-MM-DD"));
                                     $("#my_meta_box_te").val(calEvent.end.format("HH:mm"));
+                                    
                                     $('#dialog').dialog({
                                         title: calEvent.title,
                                         width: 350,
@@ -86,7 +87,7 @@ $(window).load(function () {
                                                     calEvent.title = title_input.val();
 
                                                     calEvent.start = new Date($("#my_meta_box_ds").val() + 'T' + $("#my_meta_box_ts").val());
-
+                                                    calEvent.description = $("#my_meta_box_desc").val();
                                                     calEvent.end = new Date($("#my_meta_box_de").val() + 'T' + $("#my_meta_box_te").val());
                                                     updateEvents(calEvent).done(function (response) {
                                                         calEvent['post_id'] = response;
@@ -135,6 +136,7 @@ $(window).load(function () {
                                     $("#my_meta_box_ts").val(calEvent.start.format("HH:mm"));
                                     $("#my_meta_box_de").val(calEvent.end.format("YYYY-MM-DD"));
                                     $("#my_meta_box_te").val(calEvent.end.format("HH:mm"));
+                                    $("#my_meta_box_desc").val(calEvent.description);
                                     $('#dialog').dialog({
                                         title: calEvent.title,
                                         width: 350,
@@ -143,13 +145,15 @@ $(window).load(function () {
                                             {
                                                 text: "OK",
                                                 click: function () {
-                                                    console.log($("#my_meta_box_ds").val() + 'T' + $("#my_meta_box_ts").val());
+                                                    //console.log($("#my_meta_box_ds").val() + 'T' + $("#my_meta_box_ts").val());
                                                     //console.log($("#my_meta_box_de").val()+'T'+$("#my_meta_box_te").val());
 
                                                     calEvent.start = moment($("#my_meta_box_ds").val() + 'T' + $("#my_meta_box_ts").val());
                                                     calEvent.end = moment($("#my_meta_box_de").val() + 'T' + $("#my_meta_box_te").val());
                                                     calEvent.title = title_input.val();
                                                     calEvent.calendar_id = calendar_id;
+                                                    calEvent.description = $("#my_meta_box_desc").val();
+                                                    console.log($("#my_meta_box_desc").val());
                                                     calendar.fullCalendar('updateEvent', calEvent);
                                                     updateEvents(calEvent);
                                                     $(this).dialog("close");
@@ -199,18 +203,25 @@ $(window).load(function () {
     function getEvents() {
         $.post(ajax_object.ajax_url, {"data": calendar_id, "action": "get_events"}, function (response) {
             console.log(response);
+            var start = 0;
+            var end = 0;
             for (i = 0; i < response.length; i++) {
+                start = new Date(response[i].start.date);
+                start = moment(start.getTime()-(offset*1000*60));
+                end = new Date(response[i].end.date);
+                end = moment(end.getTime()-(offset*1000*60));
+                //console.log(start.format());
                 calendar.fullCalendar('renderEvent',
                         {
                             'post_id': response[i].ID,
                             'title': response[i].title,
-                            'start': response[i].start.date+response[i].timezone,
+                            'start': start.format(),
                             'description': response[i].description,
-                            'end': response[i].end.date
+                            'end': end.format()
                         },
                         true
                         );
-
+                
             }
         });
     }
@@ -228,7 +239,7 @@ $(window).load(function () {
             post_id = events['post_id'];
         }
         var start = events['start']+(offset*1000*60);
-        //console.log('update:'+ moment(start).format());
+        console.log(events);
         
         var data2 =
                 {
@@ -252,9 +263,7 @@ $(window).load(function () {
             'success': function (response) {
                 console.log(response);
                 post_id = response;
-
             }}));
-
     }
 });
 

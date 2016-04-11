@@ -42,8 +42,14 @@ function get_user_callback() {
         }
     }
     else{
-        $names[0] = $taxonomies[0]->name;
-        $id[0] = $taxonomies[0]->term_id;
+        $term_id = get_option('default_calendar');
+        foreach ($taxonomies as $cat){
+            if($cat->term_id==$term_id){
+                $names[0] = $cat->name;
+                $id[0] = $cat->term_id;
+            }
+        }
+        
     }
     /*
       $all_users = get_users(array('search'=> '*'));
