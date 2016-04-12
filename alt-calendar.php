@@ -39,10 +39,12 @@ function alt_enqueue_scripts() {
     wp_enqueue_script('momentjs_tz', 'http://momentjs.com/downloads/moment-timezone.min.js', ['momentjs']);
     //wp_enqueue_script('momentjs-timezone', 'http://momentjs.com/downloads/moment-timezone-with-data-2010-2020.min.js', ['momentjs_tz']);
     wp_enqueue_script('fullCalendar_lib', plugins_url('fullcalendar/fullcalendar.min.js', __FILE__), ['momentjs']);
-
+    wp_enqueue_style('awesomefonts', 'https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css');
     wp_enqueue_script('jquery-ui', plugins_url('fullcalendar/lib/jquery-ui.min.js', __FILE__), ['jQuery_lib']);
     wp_enqueue_style('jquery_ui_css', plugins_url('fullcalendar/lib/cupertino/jquery-ui.min.css', __FILE__));
     wp_enqueue_script('fullCalendar', plugins_url('assets/js/fullCalendar.js', __FILE__), ['fullCalendar_lib', 'jquery-ui']);
+    
+    wp_enqueue_script('fc_gcal', plugins_url('fullcalendar/gcal.js', __FILE__),['fullCalendar_lib']);
     wp_localize_script('fullCalendar', 'ajax_object', array('ajax_url' => admin_url('admin-ajax.php'), 'data' => 1));
 }
 
@@ -97,12 +99,18 @@ add_action('wp_ajax_update_event', 'update_event_callback');
 //add_action('wp_ajax_nopriv_update_event', 'update_event_callback');
 add_action('wp_ajax_get_events', 'get_events_callback');
 add_action('wp_ajax_nopriv_get_events', 'get_events_callback');
+
 add_action('wp_ajax_check_admin', 'check_admin_callback');
 add_action('wp_ajax_nopriv_check_admin', 'check_admin_callback');
+
 add_action('wp_ajax_delete_event', 'delete_event_callback');
+
 add_action('wp_ajax_get_user', 'get_user_callback');
 add_action('wp_ajax_nopriv_get_user', 'get_user_callback');
 
+add_action('wp_ajax_new_calendar', 'new_calendar_callback');
+
+add_action('wp_ajax_remove_calendar', 'remove_calendar_callback');
 
 
 add_action('add_meta_boxes', 'cd_meta_box_add');

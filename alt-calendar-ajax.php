@@ -24,32 +24,91 @@ function get_calendars_callback() {
     
 }
 
-function get_user_callback() {
+function new_calendar_callback() {
+    $data = $_POST['data'];
+    $title = $data['title'];
     $current_user = wp_get_current_user();
     $user_id = $current_user->ID;
-    $taxonomies = get_terms('alt-calendar');
+    $user_meta = 'user_alt_calendars';
+    $calendars = get_user_option($user_meta, $user_id);
+    delete_user_meta($user_id, $user_meta);
+    $response = wp_insert_term($title, 'alt-calendar');
+    if (!$calendars) {
+        $calendars[0] = $response['term_id'];
+    } else {
+        array_push($calendars, $response['term_id']);
+    }
+    //var_dump($calendars);
+    add_user_meta($user_id, 'user_alt_calendars', $calendars);
+
+    header('Content-Type: application/json');
+    var_dump($response);
+    wp_die();
+}
+
+//removes calendar from user meta not from taxonomies
+function remove_calendar_callback() {
+    $current_user = wp_get_current_user();
+    $user_id = $current_user->ID;
+    $calendar_id = $_POST['data'];
+    $user_meta = 'user_alt_calendars';
+    $calendars = get_user_option($user_meta, $user_id);
+    $index = array_search($calendar_id, $calendars);
+    if ($index != NULL) {
+        unset($calendars[$index]);
+        delete_user_meta($user_id, $user_meta);
+        add_user_meta($user_id, 'user_alt_calendars', $calendars);
+    }
+    $response = $calendars;
+    header('Content-Type: application/json');
+    var_dump($response);
+    wp_die();
+}
+
+function get_user_callback() {
+    $user_id = $_POST['data'];
+    //echo $user_id;
+    $current_user;
+    if (!$user_id) {
+        $current_user = wp_get_current_user();
+        
+        $user_id = $current_user->ID;
+    }else{
+        $current_user = get_user_by('id', $user_id);
+    }
+    if ($user_id == 0) {
+        $logged_in = false;
+    } else {
+        $logged_in = true;
+    }
+
+    $calendars;
+    $taxonomies = get_terms('alt-calendar', array(
+        'hide_empty' => 0
+    ));
     $names = [];
     $id = [];
     $admin = 0;
-    $t_id = [];
+    $term_id = get_option('default_calendar');
+    $default = get_term_by('term_id', $term_id, 'alt-calendar');
+    $names[0] = $default->name;
+    $id[0] = $default->term_id;
     if ($user_id) {
-        foreach ($taxonomies as $cat) {
-            $names[] = $cat->name;
-            $id[] = $cat->term_id;
-        }
-        if (current_user_can('administrator')) {
+        if ($current_user->caps->administrator) {
             $admin = 1;
+            foreach ($taxonomies as $cal) {
+                $calendars[] = $cal->term_id;
+            }
+        } else {
+            $calendars = get_user_option('user_alt_calendars', $user_id);
         }
-    }
-    else{
-        $term_id = get_option('default_calendar');
-        foreach ($taxonomies as $cat){
-            if($cat->term_id==$term_id){
-                $names[0] = $cat->name;
-                $id[0] = $cat->term_id;
+        if ($calendars) {
+            foreach ($calendars as $value) {
+                $cat = get_term_by('term_id', $value, 'alt-calendar');
+                $names[] = $cat->name;
+                $id[] = $cat->term_id;
             }
         }
-        
     }
     /*
       $all_users = get_users(array('search'=> '*'));
@@ -61,7 +120,8 @@ function get_user_callback() {
     $response = [
         "admin" => $admin,
         "id" => $id,
-        "names" => $names
+        "names" => $names,
+        "logged_in" => $logged_in
     ];
     header('Content-Type: application/json');
     echo json_encode($response);

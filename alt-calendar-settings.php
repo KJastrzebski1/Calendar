@@ -5,6 +5,7 @@
 
 
 add_action('admin_menu', 'alt_calendar_create_menu');
+wp_enqueue_script("settingsjs", plugins_url('assets/js/alt-calendar-settings.js', __FILE__));
 
 function alt_calendar_create_menu() {
 
@@ -30,12 +31,19 @@ function alt_calendar_settings_page() {
         <form method="post" action="options.php">
             <?php settings_fields('alt-calendar-settings-group'); ?>
             <?php do_settings_sections('alt-calendar-settings-group'); ?>
+            <?php
+            $users = get_users(array(
+                'exclude' => array(1),
+                'fields' => 'all'
+            ));
+            print_r($users[0]->data->user_login);
+            ?>
             <table class="form-table">
                 <tr valign="top">
                     <th scope="row">Chose default calendar</th>
                     <td><select name="default_calendar" >
                             <?php
-                            $taxonomies = get_terms('alt-calendar');
+                            $taxonomies = get_terms('alt-calendar', 'hide_empty=0');
                             foreach ($taxonomies as $tax) {
                                 echo '<option value="' . $tax->term_id;
                                 if ($tax->term_id == get_option('default_calendar')) {
@@ -47,8 +55,29 @@ function alt_calendar_settings_page() {
                         </select>
                     </td>
                 </tr>
+                <tr>
+                    <th scope="row">Chose user</th>
+                    <td>
+                        <select id="alt-user-select" name="user">
+                            <?php
+                            foreach ($users as $user) {
+                                echo '<option value="' . $user->data->ID . '" >';
+                                echo $user->data->user_login . '</option>';
+                            }
+                            ?>
+                        </select>
+                    </td>
 
+                </tr>
+            </table>  
+
+            <table id='alt-calendar-table'>
+                <th scope="row">User's calendars</th>
             </table>
+            <script>//AltCalendarsTable(1);</script>
+
+
+
 
             <?php submit_button(); ?>
 
