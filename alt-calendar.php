@@ -112,6 +112,8 @@ add_action('wp_ajax_new_calendar', 'new_calendar_callback');
 
 add_action('wp_ajax_remove_calendar', 'remove_calendar_callback');
 
+add_action('wp_ajax_add_calendar', 'add_calendar_callback');
+
 
 add_action('add_meta_boxes', 'cd_meta_box_add');
 add_action('save_post', 'cd_meta_box_save');

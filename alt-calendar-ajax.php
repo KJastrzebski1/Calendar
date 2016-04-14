@@ -23,7 +23,23 @@ function check_admin_callback() {
 function get_calendars_callback() {
     
 }
-
+function add_calendar_callback(){
+    $data = $_POST['data'];
+    $calendar_id = $data['calendar_id'];
+    $user_id = $data['user_id'];
+    echo "siemka";
+    $calendars = get_user_option('user_alt_calendars', $user_id);
+    delete_user_meta($user_id, 'user_alt_calendars');
+    if(!array_search($calendar_id, $calendars)){
+        array_push($calendars, $calendar_id);
+    }
+    else{
+        echo 'Already in Users calendars';
+    }
+    add_user_meta($user_id, 'user_alt_calendars', $calendars);
+    
+    wp_die();
+}
 function new_calendar_callback() {
     $data = $_POST['data'];
     $title = $data['title'];
@@ -81,7 +97,7 @@ function get_user_callback() {
     } else {
         $logged_in = true;
     }
-
+    
     $calendars;
     $taxonomies = get_terms('alt-calendar', array(
         'hide_empty' => 0
@@ -94,7 +110,7 @@ function get_user_callback() {
     $names[0] = $default->name;
     $id[0] = $default->term_id;
     if ($user_id) {
-        if ($current_user->caps->administrator) {
+        if ($current_user->caps['administrator']) {
             $admin = 1;
             foreach ($taxonomies as $cal) {
                 $calendars[] = $cal->term_id;
@@ -152,15 +168,13 @@ function get_events_callback() {
 
             $the_query->the_post();
             $post_id = get_the_ID();
-            //if ($calendar_id == get_post_meta($post_id, 'calendar_id', true)) {
+            
             $response[$i]['ID'] = $post_id;
             $response[$i]['title'] = get_the_title();
             $response[$i]['description'] = get_the_content();
             $response[$i]['start'] = get_post_meta($post_id, 'start', true);
             $response[$i]['end'] = get_post_meta($post_id, 'end', true);
-
             $i++;
-            //}
         }
     } else {
         // no posts found

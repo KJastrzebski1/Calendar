@@ -5,10 +5,10 @@
 
 
 add_action('admin_menu', 'alt_calendar_create_menu');
-wp_enqueue_script("settingsjs", plugins_url('assets/js/alt-calendar-settings.js', __FILE__));
 
 function alt_calendar_create_menu() {
-
+    wp_enqueue_style('awesomefonts', 'https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css');
+    wp_enqueue_script("settingsjs", plugins_url('assets/js/alt-calendar-settings.js', __FILE__));
     //create new top-level menu
     add_menu_page('Alt Calendar Settings', 'Alt Calendar', 'administrator', 'alt_calendar', 'alt_calendar_settings_page', 'dashicons-calendar-alt');
     add_submenu_page('alt_calendar', 'Events', 'Events', 'administrator', 'edit.php?post_type=calendar_event');
@@ -69,11 +69,25 @@ function alt_calendar_settings_page() {
                     </td>
 
                 </tr>
+
             </table>  
 
             <table id='alt-calendar-table'>
-                <th scope="row">User's calendars</th>
+
             </table>
+            <div id="add-calendar-label">
+                <label></label>
+                <select id='add-calendar-select' name="add_calendar" >
+                    <?php
+                    $taxonomies = get_terms('alt-calendar', 'hide_empty=0');
+                    foreach ($taxonomies as $tax) {
+                        echo '<option value="' . $tax->term_id;
+                        echo '">' . $tax->name . '</option>';
+                    }
+                    ?>
+                </select>
+                <i id="add-calendar" class="fa fa-plus"></i>
+            </div>
             <script>//AltCalendarsTable(1);</script>
 
 
