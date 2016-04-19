@@ -56,7 +56,7 @@ $(window).load(function () {
 
                 });
             });
-    $(widget_calendar).click(function () {
+    $('#widget_calendar').click(function () {
         window.location = "alt-calendar/";
     });
 });
