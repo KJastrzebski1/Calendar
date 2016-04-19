@@ -1,6 +1,6 @@
 <?php
 
-function cd_meta_box_cb() {
+function alt_meta_box_cb() {
     // $post is already set, and contains an object: the WordPress post
     global $post;
     $values = get_post_custom($post->ID);
@@ -26,16 +26,13 @@ function cd_meta_box_cb() {
         <input type="date" id="my_meta_box_de" name="date_end" value="<?php echo $date_end ?>" />
         <input type="time" id="my_meta_box_te" name="time_end" value="<?php echo $time_end ?>" />
     </p>
-    <p>
-        <input type="checkbox" id="my_meta_box_check" name="all_day" <?php checked($all_day, 'on'); ?> />
-        <label for="all_day">All Day</label>
-    </p>
+    
     <?php
 }
 
 
 
-function cd_meta_box_save($post_id) {
+function alt_meta_box_save($post_id) {
     // Bail if we're doing an auto save
     if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE)
         return;
@@ -49,12 +46,6 @@ function cd_meta_box_save($post_id) {
         return;
     $current_user = wp_get_current_user();
     $user_id = $current_user->ID;
-    
-    $allowed = array(
-        'a' => array(// on allow a tags
-            'href' => array() // and those anchors can only have href attribute
-        )
-    );
 
     // Make sure your data is set before trying to save it
     $date_start = esc_attr($_POST['date_start']);
@@ -68,6 +59,5 @@ function cd_meta_box_save($post_id) {
     update_post_meta($post_id, 'user_id', $user_id);
 
     // This is purely my personal preference for saving check-boxes
-    $chk = isset($_POST['all_day']) && $_POST['all_day'] ? 'on' : 'off';
-    update_post_meta($post_id, 'all_day', $chk);
+    
 }

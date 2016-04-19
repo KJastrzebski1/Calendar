@@ -1,15 +1,12 @@
 /*
-To change this license header, choose License Headers in Project Properties.
-To change this template file, choose Tools | Templates
-and open the template in the editor.
-*/
-/* 
-    Created on : Apr 1, 2016, 1:07:55 PM
-    Author     : polcode
+
 */
 
 #dialog{
     display: none;
+}
+#calendar .fc-row>table{
+    margin: 0;
 }
 #add-calendar{
     color: green;
@@ -23,4 +20,24 @@ and open the template in the editor.
 }
 #admin-select{
     display: inline-block;
+}
+
+#widget_calendar{
+    cursor: pointer;
+}
+#widget_calendar .fc-day-header{
+    padding: 2px;
+
+}
+
+#widget_calendar  table,
+#widget_calendar .fc-toolbar,
+#widget_calendar h2{
+    margin-bottom: 0px;
+}
+#widget_calendar .fc-basic-view .fc-body .fc-row{
+    min-height: 0;
+}
+#widget_calendar .fc-day-grid-container{
+    height: 100% !important;
 }

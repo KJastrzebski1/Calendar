@@ -1,9 +1,10 @@
 <?php
+
 /*
   Plugin Name: Alt Calendar
   Description: The best wordpress calendar u've ever seen. :)
   Author: Krzysztof Jastrzebski
- * Version: 0.5.1
+ * Version: 0.7.1
  */
 
 
@@ -42,10 +43,22 @@ function alt_enqueue_scripts() {
     wp_enqueue_style('awesomefonts', 'https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css');
     wp_enqueue_script('jquery-ui', plugins_url('fullcalendar/lib/jquery-ui.min.js', __FILE__), ['jQuery_lib']);
     wp_enqueue_style('jquery_ui_css', plugins_url('fullcalendar/lib/cupertino/jquery-ui.min.css', __FILE__));
-    wp_enqueue_script('fullCalendar', plugins_url('assets/js/fullCalendar.js', __FILE__), ['fullCalendar_lib', 'jquery-ui']);
-    
-    wp_enqueue_script('fc_gcal', plugins_url('fullcalendar/gcal.js', __FILE__),['fullCalendar_lib']);
-    wp_localize_script('fullCalendar', 'ajax_object', array('ajax_url' => admin_url('admin-ajax.php'), 'data' => 1));
+    global $pagename;
+   
+    if ($pagename == 'alt-calendar') {
+        wp_enqueue_script('fullCalendar', plugins_url('assets/js/fullCalendar.js', __FILE__), ['fullCalendar_lib', 'jquery-ui']);
+        wp_localize_script('fullCalendar', 'ajax_object', array(
+            'ajax_url' => admin_url('admin-ajax.php'),
+            'api_key' => 'AIzaSyBg5viJdIm0bBtQW6QVP1U7jx9OLevIUuw'
+        ));
+    } else {
+        wp_enqueue_script('calendar_widget', plugins_url('assets/js/alt-calendar-widget.js', __FILE__), ['fullCalendar_lib', 'jquery-ui']);
+        wp_localize_script('calendar_widget', 'ajax_object', array(
+            'ajax_url' => admin_url('admin-ajax.php'),
+            'api_key' => 'AIzaSyBg5viJdIm0bBtQW6QVP1U7jx9OLevIUuw'
+        ));
+    }
+    wp_enqueue_script('fc_gcal', plugins_url('fullcalendar/gcal.js', __FILE__), ['fullCalendar_lib']);
 }
 
 add_action('wp_enqueue_scripts', 'alt_enqueue_scripts');
@@ -115,9 +128,30 @@ add_action('wp_ajax_remove_calendar', 'remove_calendar_callback');
 add_action('wp_ajax_add_calendar', 'add_calendar_callback');
 
 
-add_action('add_meta_boxes', 'cd_meta_box_add');
-add_action('save_post', 'cd_meta_box_save');
-function cd_meta_box_add() {
-    add_meta_box('my-meta-box-id', 'Event data', 'cd_meta_box_cb', 'calendar_event', 'normal', 'high');
+add_action('add_meta_boxes', 'alt_meta_box_add');
+add_action('save_post', 'alt_meta_box_save');
+
+function alt_meta_box_add() {
+    add_meta_box('my-meta-box-id', 'Event data', 'alt_meta_box_cb', 'calendar_event', 'normal', 'high');
 }
 
+add_action("delete_alt-calendar", 'remove_calendar_from_users');
+
+function remove_calendar_from_users($Term_ID) {
+    $users = get_users(array(
+        'exclude' => array(1),
+        'fields' => 'all'
+    ));
+    $user_meta = 'user_alt_calendars';
+    foreach ($users as $user) {
+        $user_id = $user->data->ID;
+
+        $calendars = get_user_option($user_meta, $user_id);
+        $key = array_search(intval($Term_ID), $calendars);
+        if ($key != NULL) {
+            unset($calendars[$key]);
+            delete_user_meta($user_id, $user_meta);
+            add_user_meta($user_id, $user_meta, $calendars);
+        }
+    }
+}

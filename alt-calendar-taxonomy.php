@@ -1,11 +1,5 @@
 <?php
 
-/* 
- * 
- */
-
-
-
 function add_new_calendar(){
     $labels = array(
 		'name'                       => _x( 'Chose calendars', 'taxonomy general name' ),

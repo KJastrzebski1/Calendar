@@ -9,29 +9,24 @@ class Alt_Widget extends WP_Widget {
     function __construct() {
         parent::__construct(
                 'alt_widget', // Base ID
-                __('Alt Calendar', 'alt_calendar'), // Name
-                array('description' => __('Best Calendar', 'alt_calendar'),) // Args
+                __('Alt Calendar', 'alt-calendar'), // Name
+                array('description' => __('Best Calendar', 'alt-calendar'),) // Args
         );
     }
 
     public function widget($args, $instance) {
         echo $args['before_widget'];
         ?>
-<a href="alt-calendar/">
+        <div id="widget_calendar">
 
-            <div id="calendar">
-
-            </div>
-        </a>
+        </div>
         <?php
         echo $args['after_widget'];
     }
 
-
     public function form($instance) {
         
     }
-
 
     public function update($new_instance, $old_instance) {
         $instance = array();

@@ -5,7 +5,7 @@
  */
 
 function delete_event_callback() {
-    $post_id = $_POST['data'];
+    $post_id = intval($_POST['data']);
     echo $post_id;
     wp_delete_post($post_id);
     wp_die();
@@ -20,18 +20,14 @@ function check_admin_callback() {
     wp_die();
 }
 
-function get_calendars_callback() {
-    
-}
 function add_calendar_callback(){
     $data = $_POST['data'];
-    $calendar_id = $data['calendar_id'];
-    $user_id = $data['user_id'];
-    echo "siemka";
+    $calendar_id = intval($data['calendar_id']);
+    $user_id = intval($data['user_id']);
     $calendars = get_user_option('user_alt_calendars', $user_id);
     delete_user_meta($user_id, 'user_alt_calendars');
     if(!array_search($calendar_id, $calendars)){
-        array_push($calendars, $calendar_id);
+        array_push($calendars, intval($calendar_id));
     }
     else{
         echo 'Already in Users calendars';
@@ -42,7 +38,8 @@ function add_calendar_callback(){
 }
 function new_calendar_callback() {
     $data = $_POST['data'];
-    $title = $data['title'];
+    $title = sanitize_text_field($data['title']);
+    $google_id = intval($data['google_id']);
     $current_user = wp_get_current_user();
     $user_id = $current_user->ID;
     $user_meta = 'user_alt_calendars';
@@ -56,9 +53,10 @@ function new_calendar_callback() {
     }
     //var_dump($calendars);
     add_user_meta($user_id, 'user_alt_calendars', $calendars);
-
+    add_term_meta($response['term_id'], 'google_id', $google_id);
+    $response['google_id'] = $google_id;
     header('Content-Type: application/json');
-    var_dump($response);
+    echo json_encode($response);
     wp_die();
 }
 
@@ -66,7 +64,12 @@ function new_calendar_callback() {
 function remove_calendar_callback() {
     $current_user = wp_get_current_user();
     $user_id = $current_user->ID;
-    $calendar_id = $_POST['data'];
+    $data = $_POST['data'];
+    $calendar_id = intval($data['calendar_id']);
+    if($data['user_id']){
+        $user_id = intval($data['user_id']);
+    }
+    
     $user_meta = 'user_alt_calendars';
     $calendars = get_user_option($user_meta, $user_id);
     $index = array_search($calendar_id, $calendars);
@@ -77,12 +80,12 @@ function remove_calendar_callback() {
     }
     $response = $calendars;
     header('Content-Type: application/json');
-    var_dump($response);
+    echo $user_id;
     wp_die();
 }
 
 function get_user_callback() {
-    $user_id = $_POST['data'];
+    $user_id = intval($_POST['data']);
     //echo $user_id;
     $current_user;
     if (!$user_id) {
@@ -126,18 +129,17 @@ function get_user_callback() {
             }
         }
     }
-    /*
-      $all_users = get_users(array('search'=> '*'));
-      foreach ($all_users as $user){
-      $t_id[] = $user->ID;
-      }
-      $id = $t_id;
-      } */
+    if(get_option('styling')){
+        $styling = true;
+    }else{
+        $styling = false;
+    }
     $response = [
         "admin" => $admin,
         "id" => $id,
         "names" => $names,
-        "logged_in" => $logged_in
+        "logged_in" => $logged_in,
+        "styling" => $styling
     ];
     header('Content-Type: application/json');
     echo json_encode($response);
@@ -145,8 +147,14 @@ function get_user_callback() {
 }
 
 function get_events_callback() {
-    $calendar_id = $_POST['data'];
+    $calendar_id = intval($_POST['data']);
+    $google_id = get_term_meta($calendar_id, 'google_id', true);
     //echo $calendar_id;
+    if($google_id){
+        echo $google_id;
+        wp_die();
+        return;
+    }
     $the_query = new WP_Query(array(
         'post_type' => 'calendar_event',
         'tax_query' => array(
@@ -187,15 +195,15 @@ function get_events_callback() {
 function update_event_callback() {
     global $wpdb;
     $event = $_POST["data"];
-    $calendar_id = $_POST["calendar_id"];
+    $calendar_id = intval($_POST["calendar_id"]);
     $current_user = wp_get_current_user();
     $user_id = $current_user->ID;
     //$calendar_id = 
     $response = [];
 
-    $id = $event['id'];
+    $id = intval($event['id']);
 
-    $title = $event['title'];
+    $title = sanitize_text_field($event['title']);
     $start = new DateTime($event['start']);
     $end = new DateTime($event['start']);
     $end->modify("+2 hours");
@@ -206,9 +214,9 @@ function update_event_callback() {
     }
 
     if ($event['description'] != '') {
-        $desc = $event['description'];
+        $desc = sanitize_text_field($event['description']);
     }
-    $all_day = $event['allDay'];
+    //$all_day = $event['allDay'];
 
     $calendar_event = array(
         'post_title' => $title,
