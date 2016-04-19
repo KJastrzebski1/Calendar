@@ -2,9 +2,9 @@
 
 /*
   Plugin Name: Alt Calendar
-  Description: The best wordpress calendar u've ever seen. :)
+  Description: The best wordpress calendar you've ever seen. :)
   Author: Krzysztof Jastrzebski
- * Version: 0.7.1
+ * Version: 0.8.1
  */
 
 
