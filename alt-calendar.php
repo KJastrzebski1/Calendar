@@ -71,20 +71,13 @@ function alt_plugin_setup() {
     $calendar_page = array(
         'post_title' => 'Alt Calendar',
         'post_status' => 'publish',
-        'post_content' => '<div id="calendar"></div><div id="dialog"><form>
-        <p>
-        <label>Start</label>
-        <input type="date" id="my_meta_box_ds" name="date_start" value="" /><input type="time" id="my_meta_box_ts" name="time_start" value="" />
-        </p>
-        <p>
-        <label>End</label>
-        <input type="date" id="my_meta_box_de" name="date_end" value="" /><input type="time" id="my_meta_box_te" name="time_end" value="" />
-        </p>
-        <label>Description</label>
-        <textarea rows="3" cols="40" id="my_meta_box_desc" name="my_meta_box_desc"></textarea>
-        </form>
-        
-        </div>'
+        'post_content' =>
+        '<div id="calendar"></div><div id="dialog"><form><p><label>Start</label>
+            <input type="date" id="my_meta_box_ds" name="date_start" value="" /><input type="time" id="my_meta_box_ts" name="time_start" value="" /></p>
+        <p><label>End</label>
+            <input type="date" id="my_meta_box_de" name="date_end" value="" /><input type="time" id="my_meta_box_te" name="time_end" value="" /></p>
+        <p><label>Description</label>
+            <textarea rows="3" cols="40" id="my_meta_box_desc" name="my_meta_box_desc"></textarea></p></form></div>'
         ,
         'post_type' => 'page'
     );

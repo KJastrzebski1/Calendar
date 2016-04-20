@@ -31,9 +31,9 @@ $(window).load(function () {
                         var start = 0;
                         var end = 0;
                         for (i = 0; i < response.length; i++) {
-                            start = new Date(response[i].start.date);
+                            start = NewDate(response[i].start.date);
                             start = moment(start.getTime() - (offset * 1000 * 60));
-                            end = new Date(response[i].end.date);
+                            end = NewDate(response[i].end.date);
                             end = moment(end.getTime() - (offset * 1000 * 60));
                             //console.log(start.format());
                             widget_calendar.fullCalendar('renderEvent',
@@ -59,5 +59,11 @@ $(window).load(function () {
     $('#widget_calendar').click(function () {
         window.location = "alt-calendar/";
     });
+    function NewDate(str) {
+        var a = str.split(" ");
+        var d = a[0].split("-");
+        var t = a[1].split(":");
+        return new Date(d[0], (d[1] - 1), d[2], t[0], t[1], t[2]);
+    }
 });
         

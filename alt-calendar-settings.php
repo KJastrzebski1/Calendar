@@ -32,8 +32,9 @@ function alt_calendar_settings_page() {
     <div class="wrap">
         <h2>Alt Calendar</h2>
         <div class="row">
-            <div class="col-6">
-                <form method="post" action="options.php">
+            <form method="post" action="options.php">
+                <div class="col-6">
+
                     <?php settings_fields('alt-calendar-settings-group'); ?>
                     <?php do_settings_sections('alt-calendar-settings-group'); ?>
                     <?php
@@ -52,9 +53,11 @@ function alt_calendar_settings_page() {
                                     foreach ($taxonomies as $tax) {
                                         echo '<option value="' . $tax->term_id;
                                         if ($tax->term_id == get_option('default_calendar')) {
-                                            echo '" selected="selected"';
+                                            echo '" selected="selected" ';
+                                        } else {
+                                            echo '" ';
                                         }
-                                        echo '">' . $tax->name . '</option>';
+                                        echo '>' . $tax->name . '</option>';
                                     }
                                     ?>
                                 </select>
@@ -65,48 +68,58 @@ function alt_calendar_settings_page() {
 
                             <td>
                                 <select name="styling">
-                                    <option value="1" <?php if(get_option('styling')){echo 'selected';} ?> >ON</option>
-                                    <option value="0" <?php if(!get_option('styling')){echo 'selected';} ?>>OFF</option>
+                                    <option value="1" <?php
+                                    if (get_option('styling')) {
+                                        echo 'selected';
+                                    }
+                                    ?> >ON</option>
+                                    <option value="0" <?php
+                                    if (!get_option('styling')) {
+                                        echo 'selected';
+                                    }
+                                    ?>>OFF</option>
                                 </select>
                             </td>
                         </tr>
 
                     </table> 
-            </div>
-            <div class="col-6">
-                <label class="bold-label">Chose user</label>
 
-                <select id="alt-user-select" name="user">
-                    <?php
-                    foreach ($users as $user) {
-                        echo '<option value="' . $user->data->ID . '" >';
-                        echo $user->data->user_login . '</option>';
-                    }
-                    ?>
-                </select>
+                </div>
+                <div class="col-6">
+                    <label class="bold-label">Chose user</label>
 
-                <table id='alt-calendar-table'>
-
-                </table>
-                <div id="add-calendar-label">
-                    <label></label>
-                    <select id='add-calendar-select' name="add_calendar" >
+                    <select id="alt-user-select" name="user">
                         <?php
-                        $taxonomies = get_terms('alt-calendar', 'hide_empty=0');
-                        foreach ($taxonomies as $tax) {
-                            echo '<option value="' . $tax->term_id;
-                            echo '">' . $tax->name . '</option>';
+                        foreach ($users as $user) {
+                            echo '<option value="' . $user->data->ID . '" >';
+                            echo $user->data->user_login . '</option>';
                         }
                         ?>
                     </select>
-                    <i id="add-calendar" class="fa fa-plus"></i>
+
+                    <table id='alt-calendar-table'>
+
+                    </table>
+                    <div id="add-calendar-label">
+                        <label></label>
+                        <select id='add-calendar-select' name="add_calendar" >
+                            <?php
+                            $taxonomies = get_terms('alt-calendar', 'hide_empty=0');
+                            foreach ($taxonomies as $tax) {
+                                echo '<option value="' . $tax->term_id;
+                                echo '">' . $tax->name . '</option>';
+                            }
+                            ?>
+                        </select>
+                        <i id="add-calendar" class="fa fa-plus"></i>
+                    </div>
+
+
+                    <?php submit_button(); ?>
+
+
                 </div>
-
-
-                <?php submit_button(); ?>
-
-                </form>
-            </div>
+            </form>
         </div>
     </div>
 <?php } ?>

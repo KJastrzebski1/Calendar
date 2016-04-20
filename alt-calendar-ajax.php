@@ -22,12 +22,14 @@ function check_admin_callback() {
 
 function add_calendar_callback(){
     $data = $_POST['data'];
-    $calendar_id = intval($data['calendar_id']);
-    $user_id = intval($data['user_id']);
+    $calendar_id = $data['calendar_id'];
+    $user_id = $data['user_id'];
     $calendars = get_user_option('user_alt_calendars', $user_id);
     delete_user_meta($user_id, 'user_alt_calendars');
-    if(!array_search($calendar_id, $calendars)){
-        array_push($calendars, intval($calendar_id));
+    if(!in_array($calendar_id, $calendars)){
+        $calendars[] = $calendar_id;
+        header('Content-Type: application/json');
+        echo json_encode($calendars);
     }
     else{
         echo 'Already in Users calendars';
@@ -73,7 +75,8 @@ function remove_calendar_callback() {
     $user_meta = 'user_alt_calendars';
     $calendars = get_user_option($user_meta, $user_id);
     $index = array_search($calendar_id, $calendars);
-    if ($index != NULL) {
+    if ($index !== NULL) {
+        //echo 'elo';
         unset($calendars[$index]);
         delete_user_meta($user_id, $user_meta);
         add_user_meta($user_id, 'user_alt_calendars', $calendars);

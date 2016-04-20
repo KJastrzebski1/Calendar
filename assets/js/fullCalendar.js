@@ -3,7 +3,6 @@
  */
 
 $(window).load(function () {
-
     var data = []; //data used in ajax
 
     var calendar_id = 0; // calendar_id id, 0 -> not logged in
@@ -25,11 +24,11 @@ $(window).load(function () {
         }
     })
             .done(function (response) {
-                
+
                 var calendar_ids = response['id'];
                 var calendar_names = response['names'];
                 var styling = response['styling'];
-                
+
                 var logged_in = response['logged_in'];
                 if (logged_in) {
 
@@ -37,16 +36,16 @@ $(window).load(function () {
                     $('#calendar').before(select);
                     $('#admin-select').css({'display': 'inline-block'});
                     for (i = 0; i < calendar_ids.length; i++) {
-                        if(i===0){
+                        if (i === 0) {
                             $('#admin-select').prepend("<option value='" + calendar_ids[i] + "' selected >" + calendar_names[i] + "</option>");
-                        }else{
+                        } else {
                             $('#admin-select').prepend("<option value='" + calendar_ids[i] + "'>" + calendar_names[i] + "</option>");
                         }
-                        
+
                     }
                     $('#admin-select').after($('<i id="remove-calendar" class="fa fa-times" aria-hidden="true"></i>'))
                     $('#admin-select').after($('<i id="add-calendar" class="fa fa-plus"></i>'));
-                    
+
                     calendar_id = calendar_ids[0];
 
                 } else {
@@ -116,6 +115,7 @@ $(window).load(function () {
                                 element.append(event.description);
                             },
                             eventDrop: function (event) {
+                                console.log(event);
                                 if (logged_in) {
                                     event.calendar_id = calendar_id;
                                     updateEvents(event);
@@ -282,26 +282,27 @@ $(window).load(function () {
     }
     function getEvents() {
         $.post(ajax_object.ajax_url, {"data": calendar_id, "action": "get_events"}, function (response) {
-            
+            //console.log(response);
             if (response instanceof Object) {
                 var start = 0;
                 var end = 0;
                 for (i = 0; i < response.length; i++) {
-                    start = new Date(response[i].start.date);
+                    //start = new Date(response[i].start.date);
+                    //console.log(response[i].start.date);
+                    start = NewDate(response[i].start.date);
                     start = moment(start.getTime() - (offset * 1000 * 60));
-                    end = new Date(response[i].end.date);
+                    end = NewDate(response[i].end.date);
                     end = moment(end.getTime() - (offset * 1000 * 60));
                     calendar.fullCalendar('renderEvent',
                             {
-                                'post_id': response[i].ID,
-                                'title': response[i].title,
-                                'start': start.format(),
-                                'description': response[i].description,
-                                'end': end.format()
+                                "post_id": response[i].ID,
+                                "title": response[i].title,
+                                "start": start.format(),
+                                "description": response[i].description,
+                                "end": end.format()
                             },
                             true
                             );
-
                 }
             } else {
                 calendar.fullCalendar('addEventSource', {googleCalendarId: response});
@@ -309,6 +310,12 @@ $(window).load(function () {
             }
 
         });
+    }
+    function NewDate(str) {
+        var a = str.split(" ");
+        var d = a[0].split("-");
+        var t = a[1].split(":");
+        return new Date(d[0], (d[1] - 1), d[2], t[0], t[1], t[2]);
     }
     function updateEvents(events) {
         var endDate = null;
