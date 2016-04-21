@@ -3,17 +3,18 @@
  */
 
 $(window).load(function () {
-    var userLang = window.navigator.userLanguage || window.navigator.language;
+    var userLang = ajax_object.lang;
     userLang = userLang.substr(0,2);
-    //console.log(userLang);
     var data = []; //data used in ajax
-
+    console.log(ajax_object.lang);
     var calendar_id = 0; // calendar_id id, 0 -> not logged in
     var calendar; // variable for calendar
     var google_calendar = false; // is calendar from google
 
     var title_input = $("<input type='text' id='input-title' class='ui-dialog-title' name='title'>");
-
+    $.post(ajax_object.ajax_url, {"action": 'dialog_content'}, function (response) {
+        $("#dialog").html(response);
+    });
     $("#dialog").dialog({autoOpen: false});
     var offset = new Date().getTimezoneOffset();
     var title_span = $("#ui-id-1");
@@ -290,6 +291,7 @@ $(window).load(function () {
             if (response instanceof Object) {
                 var start = 0;
                 var end = 0;
+                google_calendar = false;
                 for (i = 0; i < response.length; i++) {
                     //start = new Date(response[i].start.date);
                     //console.log(response[i].start.date);

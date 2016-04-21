@@ -10,7 +10,9 @@ function alt_calendar_create_menu() {
     wp_enqueue_style('awesomefonts', 'https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css');
     wp_enqueue_style('settings_css', plugins_url('assets/css/settings.css', __FILE__));
     wp_enqueue_script("settings_js", plugins_url('assets/js/alt-calendar-settings.js', __FILE__));
-
+    wp_localize_script("settings_js", alt_var, array(
+        'name' => __('Name', 'alt-calendar')
+    ));
     //create new top-level menu
     add_menu_page('Alt Calendar Settings', 'Alt Calendar', 'administrator', 'alt-calendar', 'alt_calendar_settings_page', 'dashicons-calendar-alt');
     add_submenu_page('alt-calendar', 'Events', 'Events', 'administrator', 'edit.php?post_type=calendar_event');

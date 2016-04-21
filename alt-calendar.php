@@ -50,13 +50,15 @@ function alt_enqueue_scripts() {
         wp_enqueue_script('fullCalendar', plugins_url('assets/js/fullCalendar.js', __FILE__), ['fullCalendar_lib', 'jquery-ui']);
         wp_localize_script('fullCalendar', 'ajax_object', array(
             'ajax_url' => admin_url('admin-ajax.php'),
-            'api_key' => 'AIzaSyBg5viJdIm0bBtQW6QVP1U7jx9OLevIUuw'
+            'api_key' => 'AIzaSyBg5viJdIm0bBtQW6QVP1U7jx9OLevIUuw',
+            'lang' => get_locale()
         ));
     } else {
         wp_enqueue_script('calendar_widget', plugins_url('assets/js/alt-calendar-widget.js', __FILE__), ['fullCalendar_lib', 'jquery-ui']);
         wp_localize_script('calendar_widget', 'ajax_object', array(
             'ajax_url' => admin_url('admin-ajax.php'),
-            'api_key' => 'AIzaSyBg5viJdIm0bBtQW6QVP1U7jx9OLevIUuw'
+            'api_key' => 'AIzaSyBg5viJdIm0bBtQW6QVP1U7jx9OLevIUuw',
+            'lang' => get_locale()
         ));
     }
     wp_enqueue_script('lang-all', plugins_url('fullcalendar/lang-all.js', __FILE__), ['fullCalendar_lib']);
@@ -78,12 +80,7 @@ function alt_plugin_setup() {
         'post_title' => 'Alt Calendar',
         'post_status' => 'publish',
         'post_content' =>
-        '<div id="calendar"></div><div id="dialog"><form><p><label>Start</label>
-            <input type="date" id="my_meta_box_ds" name="date_start" value="" /><input type="time" id="my_meta_box_ts" name="time_start" value="" /></p>
-        <p><label>End</label>
-            <input type="date" id="my_meta_box_de" name="date_end" value="" /><input type="time" id="my_meta_box_te" name="time_end" value="" /></p>
-        <p><label>Description</label>
-            <textarea rows="3" cols="40" id="my_meta_box_desc" name="my_meta_box_desc"></textarea></p></form></div>'
+        '<div id="calendar"></div><div id="dialog"></div>'
         ,
         'post_type' => 'page'
     );
@@ -102,7 +99,6 @@ function alt_plugin_delete() {
 register_activation_hook(__FILE__, 'alt_plugin_setup');
 register_deactivation_hook(__FILE__, 'alt_plugin_delete');
 add_action('init', 'alt_event_init');
-
 
 
 // event meta box = = = = == = = = = == = 
@@ -126,6 +122,7 @@ add_action('wp_ajax_remove_calendar', 'remove_calendar_callback');
 
 add_action('wp_ajax_add_calendar', 'add_calendar_callback');
 
+add_action('wp_ajax_dialog_content', 'dialog_content_callback');
 
 add_action('add_meta_boxes', 'alt_meta_box_add');
 add_action('save_post', 'alt_meta_box_save');

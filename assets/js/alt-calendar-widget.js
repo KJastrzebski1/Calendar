@@ -1,5 +1,7 @@
 $(window).load(function () {
     //console.log('widget');
+    var userLang = ajax_object.lang;
+    userLang = userLang.substr(0,2);
     var widget_calendar;
     $.ajax({
         'method': 'POST',
@@ -18,6 +20,7 @@ $(window).load(function () {
                         right: ''
                     },
                     theme: response['styling'],
+                    lang: userLang,
                     //timezone: 'local',
                     editable: false
 

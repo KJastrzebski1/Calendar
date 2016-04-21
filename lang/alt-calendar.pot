@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: Alt "
 "Calendar\n"
 "POT-Creation-Date: "
-"2016-04-21 11:52+0200\n"
+"2016-04-21 13:21+0200\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Your "
 "Name <you@example.com>\n"
@@ -125,28 +125,32 @@ msgstr ""
 msgid "Description."
 msgstr ""
 
-#: alt-calendar-settings.php:49
+#: alt-calendar-settings.php:14
+msgid "Name"
+msgstr ""
+
+#: alt-calendar-settings.php:50
 msgid ""
 "Choose default calendar"
 msgstr ""
 
-#: alt-calendar-settings.php:67
+#: alt-calendar-settings.php:68
 msgid "Styling"
 msgstr ""
 
-#: alt-calendar-settings.php:75
+#: alt-calendar-settings.php:76
 msgid "ON"
 msgstr ""
 
-#: alt-calendar-settings.php:80
+#: alt-calendar-settings.php:81
 msgid "OFF"
 msgstr ""
 
-#: alt-calendar-settings.php:89
+#: alt-calendar-settings.php:90
 msgid "Choose user"
 msgstr ""
 
-#: alt-calendar-settings.php:104
+#: alt-calendar-settings.php:105
 msgid "Add calendar to:"
 msgstr ""
 
@@ -215,6 +219,18 @@ msgstr ""
 
 #: alt-calendar-taxonomy.php:20
 msgid "Calendars"
+msgstr ""
+
+#: alt-calendar.php:81
+msgid "Start"
+msgstr ""
+
+#: alt-calendar.php:83
+msgid "End"
+msgstr ""
+
+#: alt-calendar.php:85
+msgid "Description"
 msgstr ""
 
 #: class.alt-calendar-widget.php:12

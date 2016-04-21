@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Alt Calendar\n"
 "Report-Msgid-Bugs-To: Translator Name <translations@example.com>\n"
-"POT-Creation-Date: 2016-04-21 11:52+0200\n"
+"POT-Creation-Date: 2016-04-21 13:21+0200\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: Artful Demons <kalvot@artfuldemons.com>\n"
@@ -93,27 +93,31 @@ msgstr "Nie ma wydarzeń w Koszu"
 msgid "Description."
 msgstr "Opis."
 
-#: alt-calendar-settings.php:49
+#: alt-calendar-settings.php:14
+msgid "Name"
+msgstr "Nazwa"
+
+#: alt-calendar-settings.php:50
 msgid "Choose default calendar"
 msgstr "Wybierz domyślny kalendarz"
 
-#: alt-calendar-settings.php:67
+#: alt-calendar-settings.php:68
 msgid "Styling"
 msgstr "Styl"
 
-#: alt-calendar-settings.php:75
+#: alt-calendar-settings.php:76
 msgid "ON"
 msgstr "WŁ"
 
-#: alt-calendar-settings.php:80
+#: alt-calendar-settings.php:81
 msgid "OFF"
 msgstr "WYŁ"
 
-#: alt-calendar-settings.php:89
+#: alt-calendar-settings.php:90
 msgid "Choose user"
 msgstr "Wybierz użytkownika"
 
-#: alt-calendar-settings.php:104
+#: alt-calendar-settings.php:105
 msgid "Add calendar to:"
 msgstr "Dodaj kalendarz do:"
 
@@ -174,6 +178,18 @@ msgstr "Nie znaleziono kalendarzy"
 #: alt-calendar-taxonomy.php:20
 msgid "Calendars"
 msgstr "Kalendarze"
+
+#: alt-calendar.php:81
+msgid "Start"
+msgstr "Start"
+
+#: alt-calendar.php:83
+msgid "End"
+msgstr "Koniec"
+
+#: alt-calendar.php:85
+msgid "Description"
+msgstr "Opis"
 
 #: class.alt-calendar-widget.php:12
 msgid "Alt Calendar"

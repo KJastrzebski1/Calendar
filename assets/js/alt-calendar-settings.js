@@ -4,7 +4,7 @@ jQuery(document).ready(function ($) {
         $.post(ajaxurl, {"data": user_id, "action": 'get_user'}, function (response) {
             //console.log(response);
         }).done(function (response) {
-            var content = '<tr><th>ID</th><th>Name</th></tr>';
+            var content = '<tr><th>ID</th><th>'+alt_var.name +'</th></tr>';
             for (i = 0; i < response['id'].length; i++) {
                 content += '<tr><td>' + response['id'][i] + '</td><td>' + response['names'][i] + '</td><td>';
                 if(i>0){
