@@ -88,14 +88,12 @@ function remove_calendar_callback() {
 }
 
 function get_user_callback() {
-    $user_id = intval($_POST['data']);
-    $current_user;
-    if (!$user_id) {
-        $current_user = wp_get_current_user();
-        
-        $user_id = $current_user->ID;
-    }else{
+    if(isset($_POST['data'])){
+        $user_id = intval($_POST['data']);
         $current_user = get_user_by('id', $user_id);
+    }else{
+        $current_user = wp_get_current_user();
+        $user_id = $current_user->ID;
     }
     if ($user_id == 0) {
         $logged_in = false;
@@ -115,7 +113,7 @@ function get_user_callback() {
     $names[0] = $default->name;
     $id[0] = $default->term_id;
     if ($user_id) {
-        if ($current_user->caps['administrator']) {
+        if (isset($current_user->caps['administrator'])) {
             $admin = 1;
             foreach ($taxonomies as $cal) {
                 $calendars[] = $cal->term_id;

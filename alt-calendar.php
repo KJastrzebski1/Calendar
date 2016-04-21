@@ -34,7 +34,7 @@ class Alt_Calendar {
 }
 
 function alt_enqueue_scripts() {
-    
+
     wp_enqueue_style('fullCalendar_lib_css', plugins_url('fullcalendar/fullcalendar.min.css', __FILE__));
     wp_enqueue_style('event_panel', plugins_url('assets/css/event.css', __FILE__));
     wp_enqueue_script('jQuery_lib', plugins_url('fullcalendar/lib/jquery.min.js', __FILE__));
@@ -70,12 +70,15 @@ add_action('wp_enqueue_scripts', 'alt_enqueue_scripts');
 add_action('widgets_init', function() {
     register_widget('Alt_Widget'); // class widget name
 });
-function alt_plugin_lang(){
-    load_plugin_textdomain('alt-calendar', false, dirname(plugin_basename(__FILE__)).'/lang');
+
+function alt_plugin_lang() {
+    load_plugin_textdomain('alt-calendar', false, dirname(plugin_basename(__FILE__)) . '/lang');
 }
+
 add_action('plugins_loaded', 'alt_plugin_lang');
-function alt_plugin_setup() {
-    
+
+function alt_plugin_activate() {
+
     $calendar_page = array(
         'post_title' => 'Alt Calendar',
         'post_status' => 'publish',
@@ -84,25 +87,56 @@ function alt_plugin_setup() {
         ,
         'post_type' => 'page'
     );
-
     wp_insert_post($calendar_page);
 }
 
-function alt_plugin_delete() {
+function alt_plugin_deactivate() {
     $page = get_page_by_title('Alt Calendar');
-
     wp_delete_post($page->ID, true);
-
+    
     flush_rewrite_rules();
 }
 
-register_activation_hook(__FILE__, 'alt_plugin_setup');
-register_deactivation_hook(__FILE__, 'alt_plugin_delete');
+function alt_plugin_user_delete($user_id) {
+    delete_user_meta($user_id, 'user_alt_calendars');
+}
+
+function alt_plugin_uninstall() {
+    
+    $users = get_users(array(
+        'fields' => 'all'
+    ));
+    $query = new WP_Query(array('post_type' => 'calendar_event'));
+    if ($query->have_posts()) {
+        while ($query->have_posts()) {
+            $query->the_post();
+            wp_delete_post($query->post->ID);
+        }
+    }
+    $terms = get_terms('alt-calendar', 'hide_empty=0');
+    foreach($terms as $term){
+        wp_delete_term($term->term_id, 'alt-calendar');
+    }
+    foreach ($users as $user) {
+        $user_id = $user->data->ID;
+        delete_user_meta($user_id, 'user_alt_calendars');
+    }
+    unregister_setting('alt-calendar-settings-group', 'default_calendar');
+    unregister_setting('alt-calendar-settings-group', 'styling');
+    delete_option('default_calendar');
+    delete_option('styling');
+}
+
+add_action('delete_user', 'alt_plugin_user_delete');
+
+register_activation_hook(__FILE__, 'alt_plugin_activate');
+register_deactivation_hook(__FILE__, 'alt_plugin_deactivate');
+register_uninstall_hook(__FILE__, 'alt_plugin_uninstall');
 add_action('init', 'alt_event_init');
 
-
-// event meta box = = = = == = = = = == = 
 // AJAX events handler
+// defintions in alt-calendar-ajax.php
+
 add_action('wp_ajax_update_event', 'update_event_callback');
 //add_action('wp_ajax_nopriv_update_event', 'update_event_callback');
 add_action('wp_ajax_get_events', 'get_events_callback');

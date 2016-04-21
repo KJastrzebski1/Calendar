@@ -10,7 +10,7 @@ function alt_calendar_create_menu() {
     wp_enqueue_style('awesomefonts', 'https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css');
     wp_enqueue_style('settings_css', plugins_url('assets/css/settings.css', __FILE__));
     wp_enqueue_script("settings_js", plugins_url('assets/js/alt-calendar-settings.js', __FILE__));
-    wp_localize_script("settings_js", alt_var, array(
+    wp_localize_script("settings_js", 'alt_var', array(
         'name' => __('Name', 'alt-calendar')
     ));
     //create new top-level menu
@@ -27,6 +27,7 @@ function register_alt_calendar_settings() {
     //register our settings
     register_setting('alt-calendar-settings-group', 'default_calendar');
     register_setting('alt-calendar-settings-group', 'styling');
+    update_option('styling', 0);
 }
 
 function alt_calendar_settings_page() {
@@ -113,11 +114,7 @@ function alt_calendar_settings_page() {
                         </select>
                         <i id="add-calendar" class="fa fa-plus"></i>
                     </div>
-
-
                     <?php submit_button(); ?>
-
-
                 </div>
             </form>
         </div>

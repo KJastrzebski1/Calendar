@@ -23,6 +23,8 @@ Plugin supports localization. At this moment it's avaliable in:
 * Polish
 * English
 
+Plugin store dates in UTC and show them to user with added timezone.
+
 == Changelog ==
 
 = 1.0 =

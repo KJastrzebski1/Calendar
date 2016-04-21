@@ -38,7 +38,6 @@ $(window).load(function () {
                             start = moment(start.getTime() - (offset * 1000 * 60));
                             end = NewDate(response[i].end.date);
                             end = moment(end.getTime() - (offset * 1000 * 60));
-                            //console.log(start.format());
                             widget_calendar.fullCalendar('renderEvent',
                                     {
                                         'post_id': response[i].ID,
