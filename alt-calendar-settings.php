@@ -42,11 +42,10 @@ function alt_calendar_settings_page() {
                         'exclude' => array(1),
                         'fields' => 'all'
                     ));
-                    //print_r($users[0]->data->user_login);
                     ?>
                     <table class="form-table">
                         <tr valign="top">
-                            <th scope="row">Choose default calendar</th>
+                            <th scope="row"><?php _e("Choose default calendar", 'alt-calendar'); ?></th>
                             <td><select name="default_calendar" >
                                     <?php
                                     $taxonomies = get_terms('alt-calendar', 'hide_empty=0');
@@ -64,7 +63,7 @@ function alt_calendar_settings_page() {
                             </td>
                         </tr>
                         <tr>
-                            <th scope="row">Styling</th>
+                            <th scope="row"><?php _e('Styling', 'alt-calendar'); ?></th>
 
                             <td>
                                 <select name="styling">
@@ -72,12 +71,12 @@ function alt_calendar_settings_page() {
                                     if (get_option('styling')) {
                                         echo 'selected';
                                     }
-                                    ?> >ON</option>
+                                    ?> ><?php _e('ON', 'alt-calendar'); ?></option>
                                     <option value="0" <?php
                                     if (!get_option('styling')) {
                                         echo 'selected';
                                     }
-                                    ?>>OFF</option>
+                                    ?>><?php _e('OFF', 'alt-calendar');?></option>
                                 </select>
                             </td>
                         </tr>
@@ -86,7 +85,7 @@ function alt_calendar_settings_page() {
 
                 </div>
                 <div class="col-6">
-                    <label class="bold-label">Chose user</label>
+                    <label class="bold-label"><?php _e('Choose user', 'alt-calendar'); ?></label>
 
                     <select id="alt-user-select" name="user">
                         <?php
@@ -101,10 +100,9 @@ function alt_calendar_settings_page() {
 
                     </table>
                     <div id="add-calendar-label">
-                        <label></label>
+                        <label><?php _e('Add calendar to:', 'alt-calendar'); ?></label>
                         <select id='add-calendar-select' name="add_calendar" >
                             <?php
-                            $taxonomies = get_terms('alt-calendar', 'hide_empty=0');
                             foreach ($taxonomies as $tax) {
                                 echo '<option value="' . $tax->term_id;
                                 echo '">' . $tax->name . '</option>';

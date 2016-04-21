@@ -51,7 +51,6 @@ $(window).load(function () {
                     } else {
                         widget_calendar.fullCalendar('addEventSource', {googleCalendarId: response});
                         google_calendar = true;
-                        //console.log('elo');
                     }
 
                 });

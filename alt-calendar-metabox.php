@@ -47,7 +47,6 @@ function alt_meta_box_save($post_id) {
     $current_user = wp_get_current_user();
     $user_id = $current_user->ID;
 
-    // Make sure your data is set before trying to save it
     $date_start = esc_attr($_POST['date_start']);
     $time_start = esc_attr($_POST['time_start']);
     $date_end = esc_attr($_POST['date_end']);
@@ -58,6 +57,4 @@ function alt_meta_box_save($post_id) {
     update_post_meta($post_id, 'end', $end);
     update_post_meta($post_id, 'user_id', $user_id);
 
-    // This is purely my personal preference for saving check-boxes
-    
 }

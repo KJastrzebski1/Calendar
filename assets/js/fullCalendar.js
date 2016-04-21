@@ -3,6 +3,9 @@
  */
 
 $(window).load(function () {
+    var userLang = window.navigator.userLanguage || window.navigator.language;
+    userLang = userLang.substr(0,2);
+    //console.log(userLang);
     var data = []; //data used in ajax
 
     var calendar_id = 0; // calendar_id id, 0 -> not logged in
@@ -56,6 +59,7 @@ $(window).load(function () {
                         {
                             googleCalendarApiKey: ajax_object.api_key,
                             timezone: 'local',
+                            lang: userLang,
                             header:
                                     {
                                         left: 'prev,next',

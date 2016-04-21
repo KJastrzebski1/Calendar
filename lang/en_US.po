@@ -1,0 +1,184 @@
+# WordPress Blank Pot
+# Copyright (C) 2014 ...
+# This file is distributed under the GNU General Public License v2 or later.
+msgid ""
+msgstr ""
+"Project-Id-Version: Alt Calendar\n"
+"Report-Msgid-Bugs-To: Translator Name <translations@example.com>\n"
+"POT-Creation-Date: 2016-04-21 10:30+0200\n"
+"PO-Revision-Date: \n"
+"Last-Translator: \n"
+"Language-Team: Artful Demons <kalvot@artfuldemons.com>\n"
+"Language: en_US\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Textdomain-Support: yesX-Generator: Poedit 1.6.4\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-KeywordsList: __;_e;esc_html_e;esc_html_x:1,2c;esc_html__;"
+"esc_attr_e;esc_attr_x:1,2c;esc_attr__;_ex:1,2c;_nx:4c,1,2;"
+"_nx_noop:4c,1,2;_x:1,2c;_n:1,2;_n_noop:1,2;__ngettext:1,2;"
+"__ngettext_noop:1,2;_c,_nc:4c,1,2\n"
+"X-Poedit-Basepath: ..\n"
+"X-Generator: Poedit 1.8.7\n"
+"X-Poedit-SearchPath-0: .\n"
+
+#: fullcalendar/lib/jquery-ui.min.js:8
+msgid "'"
+msgstr ""
+
+#: alt-calendar-event.php:9
+msgctxt "post type general name"
+msgid "Events"
+msgstr ""
+
+#: alt-calendar-event.php:10
+msgctxt "post type singular name"
+msgid "Event"
+msgstr ""
+
+#: alt-calendar-event.php:11
+msgctxt "admin menu"
+msgid "Events"
+msgstr ""
+
+#: alt-calendar-event.php:12
+msgctxt "add new on admin bar"
+msgid "Event"
+msgstr ""
+
+#: alt-calendar-event.php:13
+msgctxt "event"
+msgid "Add New"
+msgstr ""
+
+#: alt-calendar-event.php:14
+msgid "Add New Event"
+msgstr ""
+
+#: alt-calendar-event.php:15
+msgid "New Event"
+msgstr ""
+
+#: alt-calendar-event.php:16
+msgid "Edit Event"
+msgstr ""
+
+#: alt-calendar-event.php:17
+msgid "View Event"
+msgstr ""
+
+#: alt-calendar-event.php:18
+msgid "All Events"
+msgstr ""
+
+#: alt-calendar-event.php:19
+msgid "Search Events"
+msgstr ""
+
+#: alt-calendar-event.php:20
+msgid "Parent Events:"
+msgstr ""
+
+#: alt-calendar-event.php:21
+msgid "No events found."
+msgstr ""
+
+#: alt-calendar-event.php:22
+msgid "No events found in Trash."
+msgstr ""
+
+#: alt-calendar-event.php:27
+msgid "Description."
+msgstr ""
+
+#: alt-calendar-settings.php:49
+msgid "Choose default calendar"
+msgstr ""
+
+#: alt-calendar-settings.php:67
+msgid "Styling"
+msgstr ""
+
+#: alt-calendar-settings.php:75
+msgid "ON"
+msgstr "ON"
+
+#: alt-calendar-settings.php:80
+msgid "OFF"
+msgstr ""
+
+#: alt-calendar-settings.php:89
+msgid "Choose user"
+msgstr ""
+
+#: alt-calendar-settings.php:104
+msgid "Add calendar to "
+msgstr ""
+
+#: alt-calendar-taxonomy.php:5
+msgctxt "taxonomy general name"
+msgid "Chose calendars"
+msgstr ""
+
+#: alt-calendar-taxonomy.php:6
+msgctxt "taxonomy singular name"
+msgid "Calendar"
+msgstr ""
+
+#: alt-calendar-taxonomy.php:7
+msgid "Search Calendars"
+msgstr ""
+
+#: alt-calendar-taxonomy.php:8
+msgid "Popular Clendars"
+msgstr ""
+
+#: alt-calendar-taxonomy.php:9
+msgid "All Calendars"
+msgstr ""
+
+#: alt-calendar-taxonomy.php:12
+msgid "Edit Calendar"
+msgstr ""
+
+#: alt-calendar-taxonomy.php:13
+msgid "Update Calendar"
+msgstr ""
+
+#: alt-calendar-taxonomy.php:14
+msgid "Add New Calendar"
+msgstr ""
+
+#: alt-calendar-taxonomy.php:15
+msgid "New Writer Calendar"
+msgstr ""
+
+#: alt-calendar-taxonomy.php:16
+msgid "Separate calendars with commas"
+msgstr ""
+
+#: alt-calendar-taxonomy.php:17
+msgid "Add or remove calendars"
+msgstr ""
+
+#: alt-calendar-taxonomy.php:18
+msgid "Choose from the most used calendars"
+msgstr ""
+
+#: alt-calendar-taxonomy.php:19
+msgid "No calendars found."
+msgstr ""
+
+#: alt-calendar-taxonomy.php:20
+msgid "Calendars"
+msgstr ""
+
+#: class.alt-calendar-widget.php:12
+msgid "Alt Calendar"
+msgstr ""
+
+#: class.alt-calendar-widget.php:13
+msgid "Best Calendar"
+msgstr ""

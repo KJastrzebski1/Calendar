@@ -36,5 +36,3 @@ class Alt_Widget extends WP_Widget {
     }
 
 }
-
-// class Foo_Widget

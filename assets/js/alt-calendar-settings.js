@@ -15,7 +15,8 @@ jQuery(document).ready(function ($) {
                 content += '</i></td></tr>';
             }
             $("#alt-calendar-table").html((content));
-            $('#add-calendar-label label').text('Add calendar to ' + $("#alt-user-select option:selected").text());
+            $("#user").remove();
+            $('#add-calendar-label label:first').after('<label id="user" class="bold-label"> '+ $("#alt-user-select option:selected").text()+'</label>');
             $("#add-calendar-label").show();
 
         });
@@ -24,7 +25,6 @@ jQuery(document).ready(function ($) {
     altCalendarsTable($("#alt-user-select option:selected").val());
     
     $("#alt-user-select").change(function () {
-        //console.log('cale zycie');
         var user_id = $("#alt-user-select option:selected").val();
         altCalendarsTable(user_id);
 
@@ -41,7 +41,6 @@ jQuery(document).ready(function ($) {
         });
     });
     $(document).on('click', '.remove-calendar', function () {
-        //console.log($(this).parent().parent().find('td:first').text());
         var data = {
             'calendar_id': $(this).parent().parent().find('td:first').text(),
             'user_id': $("#alt-user-select option:selected").val()

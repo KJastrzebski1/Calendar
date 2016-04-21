@@ -53,7 +53,7 @@ function new_calendar_callback() {
     } else {
         array_push($calendars, $response['term_id']);
     }
-    //var_dump($calendars);
+    
     add_user_meta($user_id, 'user_alt_calendars', $calendars);
     add_term_meta($response['term_id'], 'google_id', $google_id);
     $response['google_id'] = $google_id;
@@ -75,8 +75,8 @@ function remove_calendar_callback() {
     $user_meta = 'user_alt_calendars';
     $calendars = get_user_option($user_meta, $user_id);
     $index = array_search($calendar_id, $calendars);
+    
     if ($index !== NULL) {
-        //echo 'elo';
         unset($calendars[$index]);
         delete_user_meta($user_id, $user_meta);
         add_user_meta($user_id, 'user_alt_calendars', $calendars);
@@ -89,7 +89,6 @@ function remove_calendar_callback() {
 
 function get_user_callback() {
     $user_id = intval($_POST['data']);
-    //echo $user_id;
     $current_user;
     if (!$user_id) {
         $current_user = wp_get_current_user();
@@ -152,7 +151,6 @@ function get_user_callback() {
 function get_events_callback() {
     $calendar_id = intval($_POST['data']);
     $google_id = get_term_meta($calendar_id, 'google_id', true);
-    //echo $calendar_id;
     if($google_id){
         echo $google_id;
         wp_die();
@@ -165,7 +163,6 @@ function get_events_callback() {
                 'taxonomy' => 'alt-calendar',
                 'field' => 'term_id',
                 'terms' => $calendar_id
-            //'operator' => 'NOT IN'
             )
         )
     ));
@@ -173,8 +170,6 @@ function get_events_callback() {
 // The Loop
     if ($the_query->have_posts()) {
         $i = 0;
-
-
         while ($the_query->have_posts()) {
 
             $the_query->the_post();
@@ -188,7 +183,6 @@ function get_events_callback() {
             $i++;
         }
     } else {
-        // no posts found
     }
     header('Content-Type: application/json');
     echo json_encode($response);
@@ -201,7 +195,6 @@ function update_event_callback() {
     $calendar_id = intval($_POST["calendar_id"]);
     $current_user = wp_get_current_user();
     $user_id = $current_user->ID;
-    //$calendar_id = 
     $response = [];
 
     $id = intval($event['id']);
@@ -219,7 +212,6 @@ function update_event_callback() {
     if ($event['description'] != '') {
         $desc = sanitize_text_field($event['description']);
     }
-    //$all_day = $event['allDay'];
 
     $calendar_event = array(
         'post_title' => $title,
@@ -231,7 +223,6 @@ function update_event_callback() {
         $post_id = $event['post_id'];
         $calendar_event['ID'] = $post_id;
     }
-    //var_dump($calendar_event);
     $post_id = wp_insert_post($calendar_event);
     if (is_wp_error($post_id)) {
         $errors = $post_id->get_error_messages();
@@ -247,8 +238,6 @@ function update_event_callback() {
         update_post_meta($post_id, 'user_id', $user_id);
         wp_set_object_terms($post_id, intval($calendar_id), 'alt-calendar');
     }
-
-    //header('Content-Type: application/json');
     echo $response;
 
     wp_die();
