@@ -6,7 +6,7 @@
   Author: Krzysztof Jastrzebski
  * Text Domain: alt-calendar
  * Domain Path: /lang
- * Version: 1.0
+ * Version: 1.0.0
  */
 
 
@@ -22,6 +22,18 @@ require_once 'alt-calendar-metabox.php';
 class Alt_Calendar {
 
     private $calendar_id;
+    private $taxonomy;
+    private $event_post_type;
+
+    public function __construct($title) {
+        $this->taxonomy = 'alt-calendar';
+        $this->event_post_type = 'calendar_event';
+        $this->calendar_id = wp_insert_term($title, $this->taxonomy);
+    }
+
+    public function add_event($event) {
+        
+    }
 
     public function get() {
         return $this->calendar_id;
@@ -87,13 +99,40 @@ function alt_plugin_activate() {
         ,
         'post_type' => 'page'
     );
-    wp_insert_post($calendar_page);
+    
+    $installed = get_option('installed');
+    if (!$installed) {
+        update_option('installed', 1);
+
+        $example_event = array(
+            'post_title' => 'Example Event',
+            'post_status' => 'publish',
+            'post_content' => 'Simple description',
+            'post_type' => 'calendar_event'
+        );
+        $event_id = wp_insert_post($example_event);
+        
+        $start = new DateTime(current_time('Y-m-d H:i'));
+        $end = new DateTime(current_time('Y-m-d H:i'));
+        $end->modify('+2 hours');
+        update_post_meta($event_id, 'start', $start);
+        update_post_meta($event_id, 'end', $end);
+        update_option('styling', 0);
+        
+        if(!taxonomy_exists('alt-calendar')){
+            add_new_calendar();
+        }
+        wp_set_object_terms($event_id, 'Example Calendar', 'alt-calendar', true);
+        wp_insert_post($calendar_page);
+    }
 }
 
 function alt_plugin_deactivate() {
     $page = get_page_by_title('Alt Calendar');
     wp_delete_post($page->ID, true);
-    
+    $event = get_page_by_title('Example Event');
+    wp_delete_post($event->ID, true);
+
     flush_rewrite_rules();
 }
 
@@ -102,7 +141,7 @@ function alt_plugin_user_delete($user_id) {
 }
 
 function alt_plugin_uninstall() {
-    
+    global $wpdb;
     $users = get_users(array(
         'fields' => 'all'
     ));
@@ -110,12 +149,26 @@ function alt_plugin_uninstall() {
     if ($query->have_posts()) {
         while ($query->have_posts()) {
             $query->the_post();
+            wp_delete_object_term_relationships($query->post->ID, 'alt-calendar');
             wp_delete_post($query->post->ID);
+            
         }
     }
-    $terms = get_terms('alt-calendar', 'hide_empty=0');
-    foreach($terms as $term){
-        wp_delete_term($term->term_id, 'alt-calendar');
+    foreach (array('alt-calendar') as $taxonomy) {
+        // Prepare & excecute SQL
+        $terms = $wpdb->get_results($wpdb->prepare("SELECT t.*, tt.* FROM $wpdb->terms AS t INNER JOIN $wpdb->term_taxonomy AS tt ON t.term_id = tt.term_id WHERE tt.taxonomy IN ('%s') ORDER BY t.name ASC", $taxonomy));
+
+        // Delete Terms
+        if ($terms) {
+            foreach ($terms as $term) {
+                $wpdb->delete($wpdb->term_taxonomy, array('term_taxonomy_id' => $term->term_taxonomy_id));
+                $wpdb->delete($wpdb->terms, array('term_id' => $term->term_id));
+                //delete_option('prefix_' . $taxonomy->slug . '_option_name');
+            }
+        }
+
+        // Delete Taxonomy
+        $wpdb->delete($wpdb->term_taxonomy, array('taxonomy' => $taxonomy), array('%s'));
     }
     foreach ($users as $user) {
         $user_id = $user->data->ID;
@@ -123,6 +176,8 @@ function alt_plugin_uninstall() {
     }
     unregister_setting('alt-calendar-settings-group', 'default_calendar');
     unregister_setting('alt-calendar-settings-group', 'styling');
+    unregister_setting('alt-calendar-settings-group', 'installed');
+    delete_option('installed');
     delete_option('default_calendar');
     delete_option('styling');
 }

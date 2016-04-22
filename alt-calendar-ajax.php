@@ -110,6 +110,7 @@ function get_user_callback() {
     $admin = 0;
     $term_id = get_option('default_calendar');
     $default = get_term_by('term_id', $term_id, 'alt-calendar');
+    //var_dump($term_id);
     $names[0] = $default->name;
     $id[0] = $default->term_id;
     if ($user_id) {
@@ -201,8 +202,6 @@ function update_event_callback() {
     $start = new DateTime($event['start']);
     $end = new DateTime($event['start']);
     $end->modify("+2 hours");
-    $start_date = $start->format('Y-m-d');
-    $start_time = $start->format('H:i');
     if ($event['end'] != '') {
         $end = new DateTime($event['end']);
     }
