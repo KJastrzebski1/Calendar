@@ -1,5 +1,4 @@
 jQuery(document).ready(function ($) {
-    //$("#add-calendar-label").hide();
     function altCalendarsTable(user_id) {
         $.post(ajaxurl, {"data": user_id, "action": 'get_user'}, function (response) {
             //console.log(response);

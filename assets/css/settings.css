@@ -28,7 +28,9 @@
 .fa:hover{
     cursor: pointer;
 }
-
+label{
+    cursor: default;
+}
 
 #alt-calendar-table{
     border-collapse: collapse;

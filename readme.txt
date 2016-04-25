@@ -1,8 +1,10 @@
 === Alt Calendar ===
 Contributors: kalvot
 Tags: calendar, organizer, schedule, event, events, google calendar
-Requires at least: 4.4.2
+Requires at least: 4.4
 Tested up to: 4.5
+License: GPL3
+License URI: http://www.gnu.org/licenses/gpl.html
 
 Simple calendar build with fullCalendar.js. Gives ability to administrate events for multiple users.
 

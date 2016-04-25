@@ -6,7 +6,6 @@ $(window).load(function () {
     var userLang = ajax_object.lang;
     userLang = userLang.substr(0,2);
     var data = []; //data used in ajax
-    console.log(ajax_object.lang);
     var calendar_id = 0; // calendar_id id, 0 -> not logged in
     var calendar; // variable for calendar
     var google_calendar = false; // is calendar from google
@@ -200,7 +199,6 @@ $(window).load(function () {
                     $("#admin-select").change(function () {
                         calendar.fullCalendar('removeEvents');
                         calendar_id = $("#admin-select option:selected").val();
-                        //console.log(calendar_id);
                         getEvents();
                     });
                     $("#add-calendar").click(function () {
@@ -229,7 +227,6 @@ $(window).load(function () {
                                         data = {'title': $("#add-calendar-name").val(),
                                             'google_id': $("#add-calendar-google-id").val()
                                         };
-                                        //console.log(data);
                                         newCalendar(data);
                                         $(this).dialog("close");
                                     }
@@ -293,8 +290,6 @@ $(window).load(function () {
                 var end = 0;
                 google_calendar = false;
                 for (i = 0; i < response.length; i++) {
-                    //start = new Date(response[i].start.date);
-                    //console.log(response[i].start.date);
                     start = NewDate(response[i].start.date);
                     start = moment(start.getTime() - (offset * 1000 * 60));
                     end = NewDate(response[i].end.date);

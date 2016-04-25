@@ -7,6 +7,10 @@
  * Text Domain: alt-calendar
  * Domain Path: /lang
  * Version: 1.0.0
+ * License: GPL3
+ * 
+ * 
+ * 
  */
 
 
@@ -163,10 +167,8 @@ function alt_plugin_uninstall() {
             foreach ($terms as $term) {
                 $wpdb->delete($wpdb->term_taxonomy, array('term_taxonomy_id' => $term->term_taxonomy_id));
                 $wpdb->delete($wpdb->terms, array('term_id' => $term->term_id));
-                //delete_option('prefix_' . $taxonomy->slug . '_option_name');
             }
         }
-
         // Delete Taxonomy
         $wpdb->delete($wpdb->term_taxonomy, array('taxonomy' => $taxonomy), array('%s'));
     }
@@ -196,9 +198,6 @@ add_action('wp_ajax_update_event', 'update_event_callback');
 //add_action('wp_ajax_nopriv_update_event', 'update_event_callback');
 add_action('wp_ajax_get_events', 'get_events_callback');
 add_action('wp_ajax_nopriv_get_events', 'get_events_callback');
-
-add_action('wp_ajax_check_admin', 'check_admin_callback');
-add_action('wp_ajax_nopriv_check_admin', 'check_admin_callback');
 
 add_action('wp_ajax_delete_event', 'delete_event_callback');
 

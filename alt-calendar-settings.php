@@ -3,6 +3,7 @@
  *  Calendar option page
  */
 
+defined( 'ABSPATH' ) or die( 'No script kiddies please!' );
 
 add_action('admin_menu', 'alt_calendar_create_menu');
 
@@ -29,17 +30,13 @@ function register_alt_calendar_settings() {
     register_setting('alt-calendar-settings-group', 'styling');
     register_setting('alt-calendar-settings-group', 'installed');
     $term_id = wp_insert_term('Example Calendar', 'alt-calendar');
-    //var_dump($term_id);
-    //die();
-    $installed = get_option('installed');
-    //if (!$installed) {
-        if(is_wp_error($term_id)){
-            $term_id = get_term_by('name', 'Example Calendar', 'alt-calendar');
-            update_option('default_calendar', $term_id->term_id);
-        }else{
-            update_option('default_calendar', $term_id['term_id']);
-        }
-    //}
+
+    if (is_wp_error($term_id)) {
+        $term_id = get_term_by('name', 'Example Calendar', 'alt-calendar');
+        update_option('default_calendar', $term_id->term_id);
+    } else {
+        update_option('default_calendar', $term_id['term_id']);
+    }
 }
 
 function alt_calendar_settings_page() {
@@ -91,7 +88,7 @@ function alt_calendar_settings_page() {
                                     if (!get_option('styling')) {
                                         echo 'selected';
                                     }
-                                    ?>><?php _e('OFF', 'alt-calendar');?></option>
+                                    ?>><?php _e('OFF', 'alt-calendar'); ?></option>
                                 </select>
                             </td>
                         </tr>

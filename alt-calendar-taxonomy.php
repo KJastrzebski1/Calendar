@@ -1,4 +1,5 @@
 <?php
+defined( 'ABSPATH' ) or die( 'No script kiddies please!' );
 
 function add_new_calendar(){
     $labels = array(
@@ -34,5 +35,4 @@ function add_new_calendar(){
             $args
             );
 }
-//register_new_calendar('admin-calendar');
 add_action('init', 'add_new_calendar');

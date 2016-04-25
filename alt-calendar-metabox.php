@@ -1,11 +1,11 @@
 <?php
 
+defined( 'ABSPATH' ) or die( 'No script kiddies please!' );
+
 function alt_meta_box_cb() {
     // $post is already set, and contains an object: the WordPress post
     global $post;
     $values = get_post_custom($post->ID);
-    //$start = unserialize($values['start'][0]);
-    //$end = unserialize($values['end'][0]);
     $date_start = isset($values['date_start']) ? $start->format('Y-m-d') : current_time('Y-m-d');
     $time_start = isset($values['time_start']) ? $start->format('H:i') : current_time('H:i');
     $date_end = isset($values['date_end']) ? $end->format('Y-m-d') : current_time('Y-m-d');

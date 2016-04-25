@@ -41,3 +41,6 @@
 #widget_calendar .fc-day-grid-container{
     height: 100% !important;
 }
+.fa:hover{
+    cursor: pointer;
+}

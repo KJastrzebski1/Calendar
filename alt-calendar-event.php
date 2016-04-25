@@ -3,6 +3,8 @@
 /* 
     Custom post type: calendar_event
  */
+defined( 'ABSPATH' ) or die( 'No script kiddies please!' );
+
 
 function alt_event_init() {
     $labels = array(
