@@ -1,5 +1,5 @@
 $(window).load(function () {
-    //console.log('widget');
+    $.noConflict();
     var userLang = ajax_object.lang;
     userLang = userLang.substr(0,2);
     var widget_calendar;
@@ -21,14 +21,12 @@ $(window).load(function () {
                     },
                     theme: response['styling'],
                     lang: userLang,
-                    //timezone: 'local',
                     editable: false
 
                 });
                 var calendar_id = response['id'][0];
 
                 $.post(ajax_object.ajax_url, {"data": calendar_id, "action": "get_events"}, function (response) {
-                    //console.log(response);
                     if (response instanceof Object) {
                         var offset = new Date().getTimezoneOffset();
                         var start = 0;

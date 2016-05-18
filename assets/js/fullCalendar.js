@@ -3,6 +3,7 @@
  */
 
 $(window).load(function () {
+    $.noConflict();
     var userLang = ajax_object.lang;
     userLang = userLang.substr(0,2);
     var data = []; //data used in ajax
