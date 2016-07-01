@@ -8,6 +8,7 @@
 #calendar .fc-row>table{
     margin: 0;
 }
+
 #add-calendar{
     color: green;
     font-size: 20px;
@@ -40,6 +41,9 @@
 }
 #widget_calendar .fc-day-grid-container{
     height: 100% !important;
+}
+#widget_calendar table tr td{
+    padding: 0;
 }
 .fa:hover{
     cursor: pointer;
