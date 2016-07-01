@@ -23,31 +23,7 @@ require_once 'alt-calendar-event.php';
 require_once 'alt-calendar-taxonomy.php';
 require_once 'alt-calendar-metabox.php';
 
-class Alt_Calendar {
 
-    private $calendar_id;
-    private $taxonomy;
-    private $event_post_type;
-
-    public function __construct($title) {
-        $this->taxonomy = 'alt-calendar';
-        $this->event_post_type = 'calendar_event';
-        $this->calendar_id = wp_insert_term($title, $this->taxonomy);
-    }
-
-    public function add_event($event) {
-        
-    }
-
-    public function get() {
-        return $this->calendar_id;
-    }
-
-    public function set($x) {
-        $this->calendar_id = $x;
-    }
-
-}
 
 function alt_enqueue_scripts() {
     wp_deregister_script('jquery');
