@@ -10,7 +10,6 @@ jQuery(function ($) {
         var calendar_id = 0; // calendar_id id, 0 -> not logged in
         var calendar; // variable for calendar
         var google_calendar = false; // is calendar from google
-
         var title_input = $("<input type='text' id='input-title' class='ui-dialog-title' name='title'>");
         $.post(ajax_object.ajax_url, {"action": 'dialog_content'}, function (response) {
             $("#dialog").html(response);
@@ -28,7 +27,6 @@ jQuery(function ($) {
             }
         })
                 .done(function (response) {
-
                     var calendar_ids = response['id'];
                     var calendar_names = response['names'];
                     var styling = response['styling'];

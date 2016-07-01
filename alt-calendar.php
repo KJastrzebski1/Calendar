@@ -53,7 +53,6 @@ function alt_enqueue_scripts() {
     wp_deregister_script('jquery');
     wp_enqueue_style('fullCalendar_lib_css', plugins_url('fullcalendar/fullcalendar.min.css', __FILE__));
     wp_enqueue_style('event_panel', plugins_url('assets/css/event.css', __FILE__));
-    wp_enqueue_style('awesomefonts', 'https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css');
     wp_enqueue_style('jquery_ui_css', plugins_url('fullcalendar/lib/cupertino/jquery-ui.min.css', __FILE__));
     
     wp_enqueue_script('jquery', plugins_url('fullcalendar/lib/jquery.min.js', __FILE__));

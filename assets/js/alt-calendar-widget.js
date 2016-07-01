@@ -1,4 +1,3 @@
-
 jQuery.noConflict();
 jQuery(function ($) {
     $(window).load(function () {
@@ -26,7 +25,6 @@ jQuery(function ($) {
                         lang: userLang,
                         //timezone: 'local',
                         editable: false
-
                     });
                     var calendar_id = response['id'][0];
 
