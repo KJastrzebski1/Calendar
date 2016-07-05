@@ -18,9 +18,14 @@ register_uninstall_hook(__FILE__, array("AltCalendar", "uninstall"));
 require_once 'alt-calendar-functions.php';
 include_once 'include/User.php';
 include_once 'include/Widget.php';
+include_once 'include/Event.php';
+include_once 'include/Calendar.php';
+
 
 use AltCalendar\User;
 use AltCalendar\Widget;
+use AltCalendar\Calendar;
+use AltCalendar\Event;
 
 AltCalendar::init();
 
@@ -31,22 +36,24 @@ class AltCalendar {
         
         add_action('wp_enqueue_scripts', 'alt_enqueue_scripts');
         Widget::init();
+        Calendar::init();
+        Event::init();
         
         add_action('plugins_loaded', 'alt_plugin_lang');
 
         //AJAX
-        add_action('wp_ajax_update_event', 'update_event_callback');
-        //add_action('wp_ajax_nopriv_update_event', 'update_event_callback');
-        add_action('wp_ajax_get_events', 'get_events_callback');
-        add_action('wp_ajax_nopriv_get_events', 'get_events_callback');
+        //add_action('wp_ajax_update_event', 'update_event_callback');
+        
+        //add_action('wp_ajax_get_events', 'get_events_callback');
+        //add_action('wp_ajax_nopriv_get_events', 'get_events_callback');
 
-        add_action('wp_ajax_delete_event', 'delete_event_callback');
+        //add_action('wp_ajax_delete_event', 'delete_event_callback');
 
-        add_action('wp_ajax_new_calendar', 'new_calendar_callback');
+        //add_action('wp_ajax_new_calendar', 'new_calendar_callback');
 
-        add_action('wp_ajax_remove_calendar', 'remove_calendar_callback');
+        //add_action('wp_ajax_remove_calendar', 'remove_calendar_callback');
 
-        add_action('wp_ajax_add_calendar', 'add_calendar_callback');
+        //add_action('wp_ajax_add_calendar', 'add_calendar_callback');
 
         add_action('wp_ajax_dialog_content', 'dialog_content_callback');
 
