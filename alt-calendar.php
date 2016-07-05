@@ -17,23 +17,21 @@ register_uninstall_hook(__FILE__, array("AltCalendar", "uninstall"));
 
 require_once 'alt-calendar-functions.php';
 include_once 'include/User.php';
+include_once 'include/Widget.php';
 
+use AltCalendar\User;
+use AltCalendar\Widget;
 
 AltCalendar::init();
 
 class AltCalendar {
 
     public static function init() {
-        //User::init();
-        //add_action('wp_ajax_get_user', 'get_user_callback');
-        //add_action('wp_ajax_nopriv_get_user', 'get_user_callback');
-        add_action('wp_ajax_get_user', array('User', 'get_user_callback'));
-        add_action('wp_ajax_nopriv_get_user', array('User', 'get_user_callback'));
+        User::init();
         
         add_action('wp_enqueue_scripts', 'alt_enqueue_scripts');
-        add_action('widgets_init', function() {
-            register_widget('Alt_Widget'); // class widget name
-        });
+        Widget::init();
+        
         add_action('plugins_loaded', 'alt_plugin_lang');
 
         //AJAX

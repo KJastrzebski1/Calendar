@@ -1,10 +1,12 @@
 <?php
 
+namespace AltCalendar;
+
 class User {
 
     public static function init() {
-        add_action('wp_ajax_get_user', array('User', 'get_user_callback'));
-        add_action('wp_ajax_nopriv_get_user', array('User', 'get_user_callback'));
+        add_action('wp_ajax_get_user', array('AltCalendar\User', 'getUser'));
+        add_action('wp_ajax_nopriv_get_user', array('AltCalendar\User', 'getUser'));
     }
 
     /*
@@ -20,7 +22,7 @@ class User {
       ];
      */
 
-    public static function get_user_callback() {
+    public static function getUser() {
         if (isset($_POST['data'])) {
             $user_id = intval($_POST['data']);
             $current_user = get_user_by('id', $user_id);
