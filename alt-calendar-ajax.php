@@ -125,7 +125,7 @@ function get_user_callback() {
         $logged_in = true;
     }
 
-    $calendars;
+    $calendars = [];
     $taxonomies = get_terms('alt-calendar', array(
         'hide_empty' => 0
     ));
@@ -283,7 +283,7 @@ function update_event_callback() {
     wp_die();
 }
 /*
- * sents structure of dialog 
+ * sents structure of a dialog 
  */
 function dialog_content_callback() {
     echo '<form><p><label>' . __('Start', 'alt-calendar') . '</label><br />

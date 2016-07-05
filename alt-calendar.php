@@ -1,15 +1,13 @@
 <?php
 
 /*
-  Plugin Name: Alt Calendar
-  Description: The best wordpress calendar you've ever seen. :)
-  Author: Krzysztof Jastrzebski
+ * Plugin Name: Alt Calendar
+ * Description: The best wordpress calendar you've ever seen. :)
+ * Author: Krzysztof Jastrzebski
  * Text Domain: alt-calendar
  * Domain Path: /lang
- * Version: 1.0.0
+ * Version: 1.0.2
  * License: GPL3
- * 
- * 
  * 
  */
 
@@ -18,12 +16,20 @@ register_deactivation_hook(__FILE__, array("AltCalendar", "deactivate"));
 register_uninstall_hook(__FILE__, array("AltCalendar", "uninstall"));
 
 require_once 'alt-calendar-functions.php';
+include_once 'include/User.php';
 
-$instance = new AltCalendar();
+
+AltCalendar::init();
 
 class AltCalendar {
 
-    public function __construct() {
+    public static function init() {
+        //User::init();
+        //add_action('wp_ajax_get_user', 'get_user_callback');
+        //add_action('wp_ajax_nopriv_get_user', 'get_user_callback');
+        add_action('wp_ajax_get_user', array('User', 'get_user_callback'));
+        add_action('wp_ajax_nopriv_get_user', array('User', 'get_user_callback'));
+        
         add_action('wp_enqueue_scripts', 'alt_enqueue_scripts');
         add_action('widgets_init', function() {
             register_widget('Alt_Widget'); // class widget name
@@ -38,9 +44,6 @@ class AltCalendar {
 
         add_action('wp_ajax_delete_event', 'delete_event_callback');
 
-        add_action('wp_ajax_get_user', 'get_user_callback');
-        add_action('wp_ajax_nopriv_get_user', 'get_user_callback');
-
         add_action('wp_ajax_new_calendar', 'new_calendar_callback');
 
         add_action('wp_ajax_remove_calendar', 'remove_calendar_callback');
@@ -51,8 +54,11 @@ class AltCalendar {
 
         add_action('add_meta_boxes', 'alt_meta_box_add');
         add_action('save_post', 'alt_meta_box_save');
-        
+
         add_action("delete_alt-calendar", 'remove_calendar_from_users');
+
+        add_action('delete_user', 'alt_plugin_user_delete');
+        add_action('init', 'alt_event_init');
     }
 
     public static function activate() {

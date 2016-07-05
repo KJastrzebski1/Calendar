@@ -46,15 +46,37 @@ function alt_enqueue_scripts() {
     wp_enqueue_script('fc_gcal', plugins_url('fullcalendar/gcal.js', __FILE__), ['fullCalendar_lib']);
 }
 
+function remove_calendar_from_users($Term_ID) {
+    $users = get_users(array(
+        'exclude' => array(1),
+        'fields' => 'all'
+    ));
+    $user_meta = 'user_alt_calendars';
+    foreach ($users as $user) {
+        $user_id = $user->data->ID;
+        $calendars = get_user_option($user_meta, $user_id);
+        $key = array_search(intval($Term_ID), $calendars);
+        if ($key != NULL) {
+            unset($calendars[$key]);
+            delete_user_meta($user_id, $user_meta);
+            add_user_meta($user_id, $user_meta, $calendars);
+        }
+    }
+}
+
+function alt_plugin_lang() {
+    load_plugin_textdomain('alt-calendar', false, dirname(plugin_basename(__FILE__)) . '/lang');
+}
+function alt_plugin_user_delete($user_id) {
+    delete_user_meta($user_id, 'user_alt_calendars');
+}
 //add_action('wp_enqueue_scripts', 'alt_enqueue_scripts');
 
 /*add_action('widgets_init', function() {
     register_widget('Alt_Widget'); // class widget name
 });*/
 
-function alt_plugin_lang() {
-    load_plugin_textdomain('alt-calendar', false, dirname(plugin_basename(__FILE__)) . '/lang');
-}
+
 
 //add_action('plugins_loaded', 'alt_plugin_lang');
 
@@ -111,9 +133,7 @@ function alt_plugin_deactivate() {
     flush_rewrite_rules();
 }*/
 
-function alt_plugin_user_delete($user_id) {
-    delete_user_meta($user_id, 'user_alt_calendars');
-}
+
 //AltCalendar method
 /*
 function alt_plugin_uninstall() {
@@ -156,12 +176,13 @@ function alt_plugin_uninstall() {
     delete_option('styling');
 }
 */
-add_action('delete_user', 'alt_plugin_user_delete');
+//add_action('delete_user', 'alt_plugin_user_delete');
+//add_action('init', 'alt_event_init');
 
 /*register_activation_hook(__FILE__, 'alt_plugin_activate');
 register_deactivation_hook(__FILE__, 'alt_plugin_deactivate');
 register_uninstall_hook(__FILE__, 'alt_plugin_uninstall');*/
-add_action('init', 'alt_event_init');
+
 
 // AJAX events handler
 // defintions in alt-calendar-ajax.php
@@ -193,20 +214,4 @@ function alt_meta_box_add() {
 
 //add_action("delete_alt-calendar", 'remove_calendar_from_users');
 
-function remove_calendar_from_users($Term_ID) {
-    $users = get_users(array(
-        'exclude' => array(1),
-        'fields' => 'all'
-    ));
-    $user_meta = 'user_alt_calendars';
-    foreach ($users as $user) {
-        $user_id = $user->data->ID;
-        $calendars = get_user_option($user_meta, $user_id);
-        $key = array_search(intval($Term_ID), $calendars);
-        if ($key != NULL) {
-            unset($calendars[$key]);
-            delete_user_meta($user_id, $user_meta);
-            add_user_meta($user_id, $user_meta, $calendars);
-        }
-    }
-}
+
