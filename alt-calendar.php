@@ -22,6 +22,7 @@ include_once 'include/Event.php';
 include_once 'include/Calendar.php';
 include_once 'include/Settings.php';
 include_once 'include/PostType.php';
+include_once 'include/MetaBox.php';
 
 use AltCalendar\PostType;
 use AltCalendar\User;
@@ -29,7 +30,7 @@ use AltCalendar\Widget;
 use AltCalendar\Calendar;
 use AltCalendar\Event;
 use AltCalendar\Settings;
-
+use AltCalendar\MetaBox;
 AltCalendar::init();
 
 class AltCalendar {
@@ -41,6 +42,7 @@ class AltCalendar {
         Event::init();
         $settings = new Settings('views/settings');
         $eventPostType = new PostType('calendar_event', 'event', 'events');
+        $eventsMetaBox = new MetaBox($eventPostType);
         add_action('wp_enqueue_scripts', 'alt_enqueue_scripts');
         
         add_action('wp_ajax_dialog_content', 'dialog_content_callback');
@@ -64,8 +66,8 @@ class AltCalendar {
 
         
 
-        add_action('add_meta_boxes', 'alt_meta_box_add');
-        add_action('save_post', 'alt_meta_box_save');
+        //add_action('add_meta_boxes', 'alt_meta_box_add');
+        //add_action('save_post', 'alt_meta_box_save');
 
         //add_action("delete_alt-calendar", 'remove_calendar_from_users');
 

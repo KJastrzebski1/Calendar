@@ -3,7 +3,7 @@
 namespace AltCalendar;
 
 class PostType {
-    protected $postType;
+    protected $slug;
     protected $single;
     protected $plural;
     protected $labels;
@@ -17,7 +17,7 @@ class PostType {
      * 
      */
     public function __construct($postType , $single, $plural, $labels = array(), $args = array()) {
-        $this->postType = $postType;
+        $this->slug = $postType;
         $this->single = strtolower($single);
         $this->plural = strtolower($plural);
         $this->labels = $labels;
@@ -29,7 +29,7 @@ class PostType {
     public function init() {
         $plural = $this->plural;
         $single = $this->single;
-        $postType = $this->postType;
+        $postType = $this->slug;
         
         $dlabels = array(
             'name' => _x(ucfirst($plural), 'post type general name', 'alt-calendar'),
@@ -66,5 +66,13 @@ class PostType {
 
         register_post_type($postType, $dargs);
     }
-
+    public function getSlug(){
+        return $this->slug;
+    }
+    public function getName(){
+        return array(
+            'singular' => $this->single,
+            'plural' => $this->plural
+        );
+    }
 }
