@@ -7,9 +7,10 @@ class Calendar {
     public static function init() {
         add_action('wp_ajax_get_events', array('AltCalendar\Calendar', 'getEvents'));
         add_action('wp_ajax_nopriv_get_events', array('AltCalendar\Calendar', 'getEvents'));
-        
-        add_action('wp_ajax_new_calendar', array('AltCalendar\Calendar', 'newCalendar'));
 
+        add_action('wp_ajax_new_calendar', array('AltCalendar\Calendar', 'newCalendar'));
+        
+        add_action("delete_alt-calendar", array('AltCalendar\Calendar', 'delete'));
     }
 
     /*
@@ -28,13 +29,15 @@ class Calendar {
 
     public static function getEvents() {
         $calendar_id = intval($_POST['data']);
+
         $google_id = get_term_meta($calendar_id, 'google_id', true);
         if ($google_id) {
             echo $google_id;
             wp_die();
             return;
         }
-        $the_query = new WP_Query(array(
+
+        $the_query = new \WP_Query(array(
             'post_type' => 'calendar_event',
             'tax_query' => array(
                 array(
@@ -44,7 +47,9 @@ class Calendar {
                 )
             )
         ));
+
         $response = [];
+
 // The Loop
         if ($the_query->have_posts()) {
             $i = 0;
@@ -68,7 +73,6 @@ class Calendar {
         wp_die();
     }
 
-   
     /*
      * Creates new calendar
      * 
@@ -99,7 +103,25 @@ class Calendar {
         echo json_encode($response);
         wp_die();
     }
-
+    public static function dialog(){
+        
+    }
     
-
+    public static function delete($Term_ID){
+        $users = get_users(array(
+        'exclude' => array(1),
+        'fields' => 'all'
+    ));
+    $user_meta = 'user_alt_calendars';
+    foreach ($users as $user) {
+        $user_id = $user->data->ID;
+        $calendars = get_user_option($user_meta, $user_id);
+        $key = array_search(intval($Term_ID), $calendars);
+        if ($key != NULL) {
+            unset($calendars[$key]);
+            delete_user_meta($user_id, $user_meta);
+            add_user_meta($user_id, $user_meta, $calendars);
+        }
+    }
+    } 
 }

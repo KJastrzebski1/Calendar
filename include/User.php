@@ -8,8 +8,10 @@ class User {
         add_action('wp_ajax_get_user', array('AltCalendar\User', 'getUser'));
         add_action('wp_ajax_nopriv_get_user', array('AltCalendar\User', 'getUser'));
         
-        add_action('wp_ajax_remove_calendar', array('AltCalendar\Calendar', 'removeCalendar'));
-        add_action('wp_ajax_remove_calendar', array('AltCalendar\Calendar', 'addCalendar'));
+        add_action('wp_ajax_remove_calendar', array('AltCalendar\User', 'removeCalendar'));
+        add_action('wp_ajax_add_calendar', array('AltCalendar\User', 'addCalendar'));
+        
+        add_action('delete_user', array('AltCalendar\User', 'delete'));
     }
 
     /*
@@ -95,6 +97,11 @@ class User {
 
     public static function addCalendar() {
         $data = $_POST['data'];
+        
+        if(!isset($data['calendar_id'])){
+            wp_die();
+            return;
+        }
         $calendar_id = $data['calendar_id'];
         $user_id = $data['user_id'];
         $calendars = get_user_option('user_alt_calendars', $user_id);
@@ -141,5 +148,7 @@ class User {
         echo $user_id;
         wp_die();
     }
-
+    public static function delete($user_id){
+        delete_user_meta($user_id, 'user_alt_calendars');
+    }
 }

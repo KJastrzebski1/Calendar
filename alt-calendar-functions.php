@@ -70,6 +70,9 @@ function alt_plugin_lang() {
 function alt_plugin_user_delete($user_id) {
     delete_user_meta($user_id, 'user_alt_calendars');
 }
+function alt_meta_box_add() {
+    add_meta_box('my-meta-box-id', 'Event data', 'alt_meta_box_cb', 'calendar_event', 'normal', 'high');
+}
 //add_action('wp_enqueue_scripts', 'alt_enqueue_scripts');
 
 /*add_action('widgets_init', function() {
@@ -208,9 +211,7 @@ add_action('wp_ajax_dialog_content', 'dialog_content_callback');
 add_action('add_meta_boxes', 'alt_meta_box_add');
 add_action('save_post', 'alt_meta_box_save');
 */
-function alt_meta_box_add() {
-    add_meta_box('my-meta-box-id', 'Event data', 'alt_meta_box_cb', 'calendar_event', 'normal', 'high');
-}
+
 
 //add_action("delete_alt-calendar", 'remove_calendar_from_users');
 
