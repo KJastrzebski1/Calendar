@@ -1,12 +1,12 @@
 <?php
 
-namespace AltCalendar;
+namespace Module;
 
 class Event {
 
     public static function init() {
-        add_action('wp_ajax_update_event', array('AltCalendar\Event', 'updateEvent'));
-        add_action('wp_ajax_delete_event', array('AltCalendar\Event','deleteEvent'));
+        add_action('wp_ajax_update_event', array('Module\Event', 'updateEvent'));
+        add_action('wp_ajax_delete_event', array('Module\Event','deleteEvent'));
     }
 
     /*

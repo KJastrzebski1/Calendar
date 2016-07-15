@@ -6,76 +6,67 @@
  * Author: Krzysztof Jastrzebski
  * Text Domain: alt-calendar
  * Domain Path: /lang
- * Version: 1.0.2
+ * Version: 1.0.3
  * License: GPL3
  * 
  */
-
-register_activation_hook(__FILE__, array("AltCalendar", "activate"));
-register_deactivation_hook(__FILE__, array("AltCalendar", "deactivate"));
-register_uninstall_hook(__FILE__, array("AltCalendar", "uninstall"));
+/*
+  register_activation_hook(__FILE__, array("AltCal", "activate"));
+  register_deactivation_hook(__FILE__, array("AltCal", "deactivate"));
+  register_uninstall_hook(__FILE__, array("AltCal", "uninstall"));
+ */
 
 require_once 'alt-calendar-functions.php';
-include_once 'include/User.php';
-include_once 'include/Widget.php';
-include_once 'include/Event.php';
-include_once 'include/Calendar.php';
-include_once 'include/Settings.php';
-include_once 'include/PostType.php';
-include_once 'include/MetaBox.php';
+require_once 'autoloader.php';
+/*
+  include_once 'include/User.php';
+  include_once 'include/Widget.php';
+  include_once 'include/Event.php';
+  include_once 'include/Calendar.php';
+ */
+include_once 'module/Settings.php';
+include_once 'module/PostType.php';
+include_once 'module/MetaBox.php';
 
-use AltCalendar\PostType;
-use AltCalendar\User;
-use AltCalendar\Widget;
-use AltCalendar\Calendar;
-use AltCalendar\Event;
-use AltCalendar\Settings;
-use AltCalendar\MetaBox;
-AltCalendar::init();
+use Framework\Plugin;
+/*
 
-class AltCalendar {
+  use Modules\User;
+  use AltCalendar\Widget;
+  use AltCalendar\Calendar;
+  use AltCalendar\Event;
 
-    public static function init() {
-        User::init();
-        Widget::init();
-        Calendar::init();
-        Event::init();
-        $settings = new Settings('views/settings');
+
+ */
+use Module\MetaBox;
+use Module\PostType;
+
+class AltCal extends Plugin {
+
+    protected $modules = [
+        'User' => '',
+        'Widget' => '',
+        'Calendar' => '',
+        'Event' => '',
+        'Settings' => 'views/settings'
+    ];
+
+    //public static function init() {
+    // }
+    public function __construct() {
+        parent::__construct();
         $eventPostType = new PostType('calendar_event', 'event', 'events');
         $eventsMetaBox = new MetaBox($eventPostType);
-        add_action('wp_enqueue_scripts', 'alt_enqueue_scripts');
-        
-        add_action('wp_ajax_dialog_content', 'dialog_content_callback');
-        add_action('wp_ajax_dialog_content', 'dialog_content_callback');
-        
-        add_action('plugins_loaded', 'alt_plugin_lang');
-        
-        //AJAX
-        //add_action('wp_ajax_update_event', 'update_event_callback');
-        
-        //add_action('wp_ajax_get_events', 'get_events_callback');
-        //add_action('wp_ajax_nopriv_get_events', 'get_events_callback');
-
-        //add_action('wp_ajax_delete_event', 'delete_event_callback');
-
-        //add_action('wp_ajax_new_calendar', 'new_calendar_callback');
-
-        //add_action('wp_ajax_remove_calendar', 'remove_calendar_callback');
-
-        //add_action('wp_ajax_add_calendar', 'add_calendar_callback');
-
-        
-
-        //add_action('add_meta_boxes', 'alt_meta_box_add');
-        //add_action('save_post', 'alt_meta_box_save');
-
-        //add_action("delete_alt-calendar", 'remove_calendar_from_users');
-
-        //add_action('delete_user', 'alt_plugin_user_delete');
-        //add_action('init', 'alt_event_init');
     }
-    
+
     public static function activate() {
+        //User::init();
+        //Widget::init();
+        //Calendar::init();
+        //Event::init();
+        //$settings = new Settings('views/settings');
+
+
         $calendar_page = array(
             'post_title' => 'Alt Calendar',
             'post_status' => 'publish',
@@ -160,3 +151,5 @@ class AltCalendar {
     }
 
 }
+
+$instance = new AltCal();

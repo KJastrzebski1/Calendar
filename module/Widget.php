@@ -1,5 +1,5 @@
 <?php
-namespace AltCalendar;
+namespace Module;
 
 defined('ABSPATH') or die('No script kiddies please!');
 
@@ -17,7 +17,7 @@ class Widget extends \WP_Widget {
     }
     public static function init(){
         add_action('widgets_init', function() {
-            register_widget('AltCalendar\Widget'); // class widget name
+            register_widget('Module\Widget'); // class widget name
         });
     }
     public function widget($args, $instance) {

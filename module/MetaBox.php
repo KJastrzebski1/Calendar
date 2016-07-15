@@ -1,6 +1,5 @@
 <?php
-
-namespace AltCalendar;
+namespace Module;
 
 class MetaBox {
     protected $postType;
@@ -26,7 +25,6 @@ class MetaBox {
         $time_start = isset($values['time_start']) ? $start->format('H:i') : current_time('H:i');
         $date_end = isset($values['date_end']) ? $end->format('Y-m-d') : current_time('Y-m-d');
         $time_end = isset($values['time_end']) ? $end->format('H:i') : date('H:i', current_time('timestamp') + 7200);
-        $all_day = isset($values['all_day']) ? esc_attr($values['all_day']) : '';
 
         // We'll use this nonce field later on when saving.
         wp_nonce_field('my_meta_box_nonce', 'meta_box_nonce');

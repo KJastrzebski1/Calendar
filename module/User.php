@@ -1,17 +1,17 @@
 <?php
 
-namespace AltCalendar;
+namespace Module;
 
 class User {
 
     public static function init() {
-        add_action('wp_ajax_get_user', array('AltCalendar\User', 'getUser'));
-        add_action('wp_ajax_nopriv_get_user', array('AltCalendar\User', 'getUser'));
+        add_action('wp_ajax_get_user', array('Module\User', 'getUser'));
+        add_action('wp_ajax_nopriv_get_user', array('Module\User', 'getUser'));
         
-        add_action('wp_ajax_remove_calendar', array('AltCalendar\User', 'removeCalendar'));
-        add_action('wp_ajax_add_calendar', array('AltCalendar\User', 'addCalendar'));
+        add_action('wp_ajax_remove_calendar', array('Module\User', 'removeCalendar'));
+        add_action('wp_ajax_add_calendar', array('Module\User', 'addCalendar'));
         
-        add_action('delete_user', array('AltCalendar\User', 'delete'));
+        add_action('delete_user', array('Module\User', 'delete'));
     }
 
     /*

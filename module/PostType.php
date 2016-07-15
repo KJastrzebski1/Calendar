@@ -1,6 +1,6 @@
 <?php
 
-namespace AltCalendar;
+namespace Module;
 
 class PostType {
     protected $slug;
