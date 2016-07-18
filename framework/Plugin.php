@@ -34,9 +34,10 @@ abstract class Plugin {
 
         $dir = $main->getFileName();
         $class = get_called_class();
-         register_activation_hook($dir, array($class, "activate"));
-          register_deactivation_hook($dir, array($class, "deactivate"));
-          register_uninstall_hook($dir, array($class, "uninstall"));
+        
+        register_activation_hook($dir, array($class, "activate"));
+        register_deactivation_hook($dir, array($class, "deactivate"));
+        register_uninstall_hook($dir, array($class, "uninstall"));
          
         $this->init();
     }

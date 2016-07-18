@@ -2,12 +2,22 @@
 
 namespace Module;
 
-class Event {
+class Event extends PostType{
+    protected static $instance;
 
     public static function init() {
-        add_action('wp_ajax_update_event', array('Module\Event', 'updateEvent'));
-        add_action('wp_ajax_delete_event', array('Module\Event','deleteEvent'));
+        static::$instance = new Event('calendar_event', 'event', 'events');
+        add_action('wp_ajax_update_event', array('\Module\Event', 'updateEvent'));
+        add_action('wp_ajax_delete_event', array('\Module\Event', 'deleteEvent'));
     }
+    
+    public static function getInstance(){
+        if(!isset(static::$instance)){
+            static::$instance = new Event('calendar_event', 'event', 'events');
+        }
+        return static::$instance;
+    }
+
 
     /*
      * Deletes event from database
@@ -31,20 +41,24 @@ class Event {
 
     public static function updateEvent() {
         global $wpdb;
+        
         $event = $_POST["data"];
         $calendar_id = intval($_POST["calendar_id"]);
         $current_user = wp_get_current_user();
         $user_id = $current_user->ID;
         $response = [];
-
+        
         $id = intval($event['id']);
-
+        
         $title = sanitize_text_field($event['title']);
-        $start = new DateTime($event['start']);
-        $end = new DateTime($event['start']);
+        $start = new \DateTime($event['start']);
+       
+        $end = new \DateTime($event['start']);
+        
         $end->modify("+2 hours");
+        
         if ($event['end'] != '') {
-            $end = new DateTime($event['end']);
+            $end = new \DateTime($event['end']);
         }
 
         if ($event['description'] != '') {
@@ -68,6 +82,7 @@ class Event {
                 echo $error;
             }
         }
+        
         if ($post_id) {
             $response = $post_id;
             update_post_meta($post_id, 'start', $start);
@@ -77,7 +92,7 @@ class Event {
             wp_set_object_terms($post_id, intval($calendar_id), 'alt-calendar');
         }
         echo $response;
-
+        
         wp_die();
     }
 

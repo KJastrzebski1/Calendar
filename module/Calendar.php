@@ -7,7 +7,9 @@ class Calendar {
     public static function init() {
         add_action('wp_ajax_get_events', array('Module\Calendar', 'getEvents'));
         add_action('wp_ajax_nopriv_get_events', array('Module\Calendar', 'getEvents'));
-
+        
+        add_action('wp_ajax_dialog_content', array('Module\Calendar', 'dialog'));
+        
         add_action('wp_ajax_new_calendar', array('Module\Calendar', 'newCalendar'));
         
         add_action("delete_alt-calendar", array('Module\Calendar', 'delete'));
@@ -104,7 +106,8 @@ class Calendar {
         wp_die();
     }
     public static function dialog(){
-        
+        include 'views/dialog.php';
+        wp_die();
     }
     
     public static function delete($Term_ID){

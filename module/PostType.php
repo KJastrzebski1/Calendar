@@ -2,7 +2,7 @@
 
 namespace Module;
 
-class PostType {
+abstract class PostType {
     protected $slug;
     protected $single;
     protected $plural;
@@ -12,21 +12,21 @@ class PostType {
      * 
      * @param string $single
      * @param string $plural
-     * @param array $labels
-     * @param array $args
+     * @param array $labels TODO
+     * @param array $args TODO
      * 
      */
-    public function __construct($postType , $single, $plural, $labels = array(), $args = array()) {
+    protected function __construct($postType , $single, $plural, $labels = array(), $args = array()) {
         $this->slug = $postType;
         $this->single = strtolower($single);
         $this->plural = strtolower($plural);
         $this->labels = $labels;
         $this->args = $args;
         
-        add_action('init', array($this, 'init'));
+        add_action('init', array($this, 'register'));
     }
     
-    public function init() {
+    public function register() {
         $plural = $this->plural;
         $single = $this->single;
         $postType = $this->slug;
@@ -36,7 +36,7 @@ class PostType {
             'singular_name' => _x(ucfirst($single), 'post type singular name', 'alt-calendar'),
             'menu_name' => _x(ucfirst($plural), 'admin menu', 'alt-calendar'),
             'name_admin_bar' => _x(ucfirst($single), 'add new on admin bar', 'alt-calendar'),
-            'add_new' => _x('Add new', 'event', 'alt-calendar'),
+            'add_new' => _x('Add new', '', 'alt-calendar'),
             'add_new_item' => __('Add new '.$single, 'alt-calendar'),
             'new_item' => __('New '.$single, 'alt-calendar'),
             'edit_item' => __('Edit '.$single, 'alt-calendar'),

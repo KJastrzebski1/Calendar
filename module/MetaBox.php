@@ -8,13 +8,14 @@ class MetaBox {
         $this->postType = $postType;
         
         add_action('add_meta_boxes', array($this, 'add'));
+        add_action('save_post', array($this, 'save'));
         
     }
     public function add(){
         $postType = $this->postType;
         $names = $postType->getName();
         add_meta_box($names['plural'] . '-meta-box-id', $names['singular'] . ' data', array($this, 'init'), $postType->getSlug(), 'normal', 'high');
-        add_action('save_post', array($this, 'save'));
+        
         
     }
     public function init() {
@@ -63,9 +64,9 @@ class MetaBox {
         $time_start = esc_attr($_POST['time_start']);
         $date_end = esc_attr($_POST['date_end']);
         $time_end = esc_attr($_POST['time_end']);
-        $start = new DateTime($date_start . ' ' . $time_start);
+        $start = new \DateTime($date_start . ' ' . $time_start);
         update_post_meta($post_id, 'start', $start);
-        $end = new DateTime($date_end . ' ' . $time_end);
+        $end = new \DateTime($date_end . ' ' . $time_end);
         update_post_meta($post_id, 'end', $end);
         update_post_meta($post_id, 'user_id', $user_id);
     }

@@ -39,7 +39,7 @@ use Framework\Plugin;
 
  */
 use Module\MetaBox;
-use Module\PostType;
+use Module\Event;
 
 class AltCal extends Plugin {
 
@@ -55,7 +55,7 @@ class AltCal extends Plugin {
     // }
     public function __construct() {
         parent::__construct();
-        $eventPostType = new PostType('calendar_event', 'event', 'events');
+        $eventPostType = Event::getInstance();//new PostType('calendar_event', 'event', 'events');
         $eventsMetaBox = new MetaBox($eventPostType);
     }
 

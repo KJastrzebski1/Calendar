@@ -5,14 +5,14 @@ defined('ABSPATH') or die('No script kiddies please!');
 //require_once 'class.alt-calendar-widget.php';
 //require_once 'alt-calendar-ajax.php';
 //require_once 'alt-calendar-settings.php';
-require_once 'alt-calendar-event.php';
+//require_once 'alt-calendar-event.php';
 require_once 'alt-calendar-taxonomy.php';
 //require_once 'alt-calendar-metabox.php';
 
 
 add_action('wp_enqueue_scripts', 'alt_enqueue_scripts');
-add_action('wp_ajax_dialog_content', 'dialog_content_callback');
-add_action('wp_ajax_dialog_content', 'dialog_content_callback');
+//add_action('wp_ajax_dialog_content', 'dialog_content_callback');
+//add_action('wp_ajax_dialog_content', 'dialog_content_callback');
 
 add_action('plugins_loaded', 'alt_plugin_lang');
 
