@@ -1,8 +1,8 @@
 <?php
 
-namespace Framework;
+namespace Gloves;
 
-require_once 'autoloader.php';
+defined( 'ABSPATH' ) or die( 'No script kiddies please!' );
 
 abstract class Plugin {
     /*
@@ -25,11 +25,12 @@ abstract class Plugin {
     protected $class;
 
     /*
-     * 
+     * @var array
      */
+    protected $config;
 
     public function __construct() {
-
+        
         $main = new \ReflectionClass(get_called_class());
 
         $dir = $main->getFileName();
@@ -47,6 +48,7 @@ abstract class Plugin {
      */
 
     protected function init() {
+        include_once 'Config.php';
         foreach ($this->modules as $module => $args) {
             $module = '\Module\\' . $module;
 

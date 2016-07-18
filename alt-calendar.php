@@ -25,19 +25,10 @@ require_once 'autoloader.php';
   include_once 'include/Calendar.php';
  */
 include_once 'module/Settings.php';
-include_once 'module/PostType.php';
 include_once 'module/MetaBox.php';
 
-use Framework\Plugin;
-/*
+use Gloves\Plugin;
 
-  use Modules\User;
-  use AltCalendar\Widget;
-  use AltCalendar\Calendar;
-  use AltCalendar\Event;
-
-
- */
 use Module\MetaBox;
 use Module\Event;
 

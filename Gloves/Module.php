@@ -1,6 +1,7 @@
 <?php
 
-namespace Framework;
+namespace Gloves;
+defined( 'ABSPATH' ) or die( 'No script kiddies please!' );
 
 abstract class Module{
     

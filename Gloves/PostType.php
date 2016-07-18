@@ -1,6 +1,9 @@
 <?php
 
-namespace Module;
+namespace Gloves;
+
+defined( 'ABSPATH' ) or die( 'No script kiddies please!' );
+//include 'config.php';
 
 abstract class PostType {
     protected $slug;
@@ -30,27 +33,27 @@ abstract class PostType {
         $plural = $this->plural;
         $single = $this->single;
         $postType = $this->slug;
-        
+        $textDomain = Config::get('text-domain');
         $dlabels = array(
-            'name' => _x(ucfirst($plural), 'post type general name', 'alt-calendar'),
-            'singular_name' => _x(ucfirst($single), 'post type singular name', 'alt-calendar'),
-            'menu_name' => _x(ucfirst($plural), 'admin menu', 'alt-calendar'),
-            'name_admin_bar' => _x(ucfirst($single), 'add new on admin bar', 'alt-calendar'),
-            'add_new' => _x('Add new', '', 'alt-calendar'),
-            'add_new_item' => __('Add new '.$single, 'alt-calendar'),
-            'new_item' => __('New '.$single, 'alt-calendar'),
-            'edit_item' => __('Edit '.$single, 'alt-calendar'),
-            'view_item' => __('View '.$single, 'alt-calendar'),
-            'all_items' => __('All '.$plural, 'alt-calendar'),
-            'search_items' => __('Search '.$plural, 'alt-calendar'),
-            'parent_item_colon' => __('Parent '.$plural.':', 'alt-calendar'),
-            'not_found' => __('No '.$plural.' found.', 'alt-calendar'),
-            'not_found_in_trash' => __('No '.$plural.' found in Trash.', 'alt-calendar')
+            'name' => _x(ucfirst($plural), 'post type general name', $textDomain),
+            'singular_name' => _x(ucfirst($single), 'post type singular name', $textDomain),
+            'menu_name' => _x(ucfirst($plural), 'admin menu', $textDomain),
+            'name_admin_bar' => _x(ucfirst($single), 'add new on admin bar', $textDomain),
+            'add_new' => _x('Add new', '', $textDomain),
+            'add_new_item' => __('Add new '.$single, $textDomain),
+            'new_item' => __('New '.$single, $textDomain),
+            'edit_item' => __('Edit '.$single, $textDomain),
+            'view_item' => __('View '.$single, $textDomain),
+            'all_items' => __('All '.$plural, $textDomain),
+            'search_items' => __('Search '.$plural, $textDomain),
+            'parent_item_colon' => __('Parent '.$plural.':', $textDomain),
+            'not_found' => __('No '.$plural.' found.', $textDomain),
+            'not_found_in_trash' => __('No '.$plural.' found in Trash.', $textDomain)
         );
 
         $dargs = array(
             'labels' => $dlabels,
-            'description' => __('Description.', 'alt-calendar'),
+            'description' => __('Description.', $textDomain),
             'public' => true,
             'publicly_queryable' => true,
             'show_ui' => true,

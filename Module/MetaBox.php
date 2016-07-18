@@ -1,6 +1,8 @@
 <?php
 namespace Module;
 
+use \Gloves\PostType;
+
 class MetaBox {
     protected $postType;
     

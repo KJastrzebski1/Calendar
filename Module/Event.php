@@ -2,18 +2,22 @@
 
 namespace Module;
 
+use \Gloves\PostType;
+
 class Event extends PostType{
     protected static $instance;
 
     public static function init() {
-        static::$instance = new Event('calendar_event', 'event', 'events');
+        if(!isset(static::$instance)){
+            static::$instance = new static('calendar_event', 'event', 'events');
+        }
         add_action('wp_ajax_update_event', array('\Module\Event', 'updateEvent'));
         add_action('wp_ajax_delete_event', array('\Module\Event', 'deleteEvent'));
     }
     
     public static function getInstance(){
         if(!isset(static::$instance)){
-            static::$instance = new Event('calendar_event', 'event', 'events');
+            static::$instance = new static('calendar_event', 'event', 'events');
         }
         return static::$instance;
     }

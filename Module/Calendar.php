@@ -2,7 +2,9 @@
 
 namespace Module;
 
-class Calendar {
+use \Gloves\Taxonomy;
+
+class Calendar extends Taxonomy{
 
     public static function init() {
         add_action('wp_ajax_get_events', array('Module\Calendar', 'getEvents'));
