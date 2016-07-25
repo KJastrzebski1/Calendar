@@ -3,7 +3,7 @@
 namespace Gloves;
 
 defined( 'ABSPATH' ) or die( 'No script kiddies please!' );
-//include 'config.php';
+
 
 abstract class PostType {
     protected $slug;
@@ -11,6 +11,8 @@ abstract class PostType {
     protected $plural;
     protected $labels;
     protected $args;
+    
+    protected static $instance;
     /**
      * 
      * @param string $single

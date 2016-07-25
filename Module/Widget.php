@@ -10,14 +10,14 @@ class Widget extends \WP_Widget {
      */
     function __construct() {
         parent::__construct(
-                'alt_widget', // Base ID
-                __('Alt Calendar', 'alt-calendar'), // Name
-                array('description' => __('Best Calendar', 'alt-calendar'),) // Args
+                'alt_widget', 
+                __('Alt Calendar', 'alt-calendar'), 
+                array('description' => __('Best Calendar', 'alt-calendar'),) 
         );
     }
     public static function init(){
         add_action('widgets_init', function() {
-            register_widget('Module\Widget'); // class widget name
+            register_widget('Module\Widget'); 
         });
     }
     public function widget($args, $instance) {

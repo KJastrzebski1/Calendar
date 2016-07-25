@@ -10,53 +10,49 @@
  * License: GPL3
  * 
  */
-/*
-  register_activation_hook(__FILE__, array("AltCal", "activate"));
-  register_deactivation_hook(__FILE__, array("AltCal", "deactivate"));
-  register_uninstall_hook(__FILE__, array("AltCal", "uninstall"));
- */
 
 require_once 'alt-calendar-functions.php';
 require_once 'autoloader.php';
-/*
-  include_once 'include/User.php';
-  include_once 'include/Widget.php';
-  include_once 'include/Event.php';
-  include_once 'include/Calendar.php';
- */
 include_once 'module/Settings.php';
 include_once 'module/MetaBox.php';
 
 use Gloves\Plugin;
+use Gloves\PluginMenu;
 
 use Module\MetaBox;
 use Module\Event;
+use Module\Calendar;
 
 class AltCal extends Plugin {
 
-    protected $modules = [
+    protected static $modules = [
         'User' => '',
         'Widget' => '',
-        'Calendar' => '',
         'Event' => '',
-        'Settings' => 'views/settings'
+        'Calendar' => '',
+        //'Settings' => 'views/settings'
+    ];
+    
+    protected static $settings = [
+        'default_calendar',
+        'styling',
+        'installed'
     ];
 
-    //public static function init() {
-    // }
-    public function __construct() {
-        parent::__construct();
-        $eventPostType = Event::getInstance();//new PostType('calendar_event', 'event', 'events');
-        $eventsMetaBox = new MetaBox($eventPostType);
+    public static function init() {
+        
+        PluginMenu::addPage('Events', 'edit.php?post_type=calendar_event');
+        PluginMenu::addPage('Calendars', 'edit-tags.php?taxonomy=alt-calendar&post_type=calendar_event');
+        PluginMenu::init('views/settings');
+        $eventsMetaBox = new MetaBox(Event::getInstance());
+        
+        parent::init();
+        
+        $term_id = Calendar::insertTerm('Example Calendar');
+        update_option('default_calendar', $term_id);
     }
 
     public static function activate() {
-        //User::init();
-        //Widget::init();
-        //Calendar::init();
-        //Event::init();
-        //$settings = new Settings('views/settings');
-
 
         $calendar_page = array(
             'post_title' => 'Alt Calendar',
@@ -143,4 +139,4 @@ class AltCal extends Plugin {
 
 }
 
-$instance = new AltCal();
+AltCal::init();

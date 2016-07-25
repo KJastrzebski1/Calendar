@@ -7,30 +7,29 @@ defined( 'ABSPATH' ) or die( 'No script kiddies please!' );
 abstract class Plugin {
     /*
      * list of modules
+     * 
      * @var array
      */
 
-    protected $modules;
+    protected static $modules;
 
     /**
-     * Plugins main file directory
-     * @var string
-     */
-    protected $dir;
-
-    /*
-     * Plugins main class
-     * @var
-     */
-    protected $class;
-
-    /*
+     * list of settings
+     * 
      * @var array
      */
-    protected $config;
+    protected static $settings;
 
-    public function __construct() {
+    private function __construct() {
         
+    }
+
+    /*
+     * Modules initialization
+     */
+
+    public static function init() {
+         include_once 'Config.php';
         $main = new \ReflectionClass(get_called_class());
 
         $dir = $main->getFileName();
@@ -39,21 +38,16 @@ abstract class Plugin {
         register_activation_hook($dir, array($class, "activate"));
         register_deactivation_hook($dir, array($class, "deactivate"));
         register_uninstall_hook($dir, array($class, "uninstall"));
-         
-        $this->init();
-    }
-
-    /*
-     * Modules initialization
-     */
-
-    protected function init() {
-        include_once 'Config.php';
-        foreach ($this->modules as $module => $args) {
+        PluginSettings::add(static::$settings);
+        ScriptsManager::init();
+        PluginSettings::init();
+       
+        foreach (static::$modules as $module => $args) {
             $module = '\Module\\' . $module;
 
             $module::init($args);
         }
+        
         spl_autoload_unregister('autoload');
 
     }

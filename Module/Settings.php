@@ -27,7 +27,7 @@ class Settings{
         //create new top-level menu
         add_menu_page('Alt Calendar Settings', 'Alt Calendar', 'administrator', 'alt-calendar', array('\Module\Settings', 'alt_calendar_settings_page'), 'dashicons-calendar-alt');
         add_submenu_page('alt-calendar', 'Events', 'Events', 'administrator', 'edit.php?post_type=calendar_event');
-        add_submenu_page('alt-calendar', 'Calendars', 'Calendars', 'administrator', 'edit-tags.php?taxonomy=alt-calendar');
+        add_submenu_page('alt-calendar', 'Calendars', 'Calendars', 'administrator', 'edit-tags.php?taxonomy=alt-calendar&post_type=calendar_event');
 
         //call register settings function
         add_action('admin_init', array('\Module\Settings', 'register_alt_calendar_settings'));

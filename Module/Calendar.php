@@ -4,24 +4,34 @@ namespace Module;
 
 use \Gloves\Taxonomy;
 
-class Calendar extends Taxonomy{
+class Calendar extends Taxonomy {
+
+    
 
     public static function init() {
+        static::getInstance();
         add_action('wp_ajax_get_events', array('Module\Calendar', 'getEvents'));
         add_action('wp_ajax_nopriv_get_events', array('Module\Calendar', 'getEvents'));
-        
+
         add_action('wp_ajax_dialog_content', array('Module\Calendar', 'dialog'));
-        
+
         add_action('wp_ajax_new_calendar', array('Module\Calendar', 'newCalendar'));
-        
+
         add_action("delete_alt-calendar", array('Module\Calendar', 'delete'));
+    }
+
+    public static function getInstance() {
+        if (!isset(static::$instance)) {
+            static::$instance = new static('alt-calendar', 'calendar', 'calendars', 'calendar_event');
+        }
+        return static::$instance;
     }
 
     /*
      * returns events of calendar
      * 
      * @param int. calendarID
-     * $return json:
+     * @return json:
      * events[] = [
      *      title
      *      description
@@ -107,26 +117,28 @@ class Calendar extends Taxonomy{
         echo json_encode($response);
         wp_die();
     }
-    public static function dialog(){
+
+    public static function dialog() {
         include 'views/dialog.php';
         wp_die();
     }
-    
-    public static function delete($Term_ID){
+
+    public static function delete($Term_ID) {
         $users = get_users(array(
-        'exclude' => array(1),
-        'fields' => 'all'
-    ));
-    $user_meta = 'user_alt_calendars';
-    foreach ($users as $user) {
-        $user_id = $user->data->ID;
-        $calendars = get_user_option($user_meta, $user_id);
-        $key = array_search(intval($Term_ID), $calendars);
-        if ($key != NULL) {
-            unset($calendars[$key]);
-            delete_user_meta($user_id, $user_meta);
-            add_user_meta($user_id, $user_meta, $calendars);
+            'exclude' => array(1),
+            'fields' => 'all'
+        ));
+        $user_meta = 'user_alt_calendars';
+        foreach ($users as $user) {
+            $user_id = $user->data->ID;
+            $calendars = get_user_option($user_meta, $user_id);
+            $key = array_search(intval($Term_ID), $calendars);
+            if ($key != NULL) {
+                unset($calendars[$key]);
+                delete_user_meta($user_id, $user_meta);
+                add_user_meta($user_id, $user_meta, $calendars);
+            }
         }
     }
-    } 
+
 }

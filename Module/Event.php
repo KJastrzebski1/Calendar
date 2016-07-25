@@ -5,12 +5,12 @@ namespace Module;
 use \Gloves\PostType;
 
 class Event extends PostType{
-    protected static $instance;
+    
 
     public static function init() {
-        if(!isset(static::$instance)){
-            static::$instance = new static('calendar_event', 'event', 'events');
-        }
+        
+        static::getInstance();
+        
         add_action('wp_ajax_update_event', array('\Module\Event', 'updateEvent'));
         add_action('wp_ajax_delete_event', array('\Module\Event', 'deleteEvent'));
     }
