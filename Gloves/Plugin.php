@@ -2,6 +2,8 @@
 
 namespace Gloves;
 
+include_once 'Config.php';
+
 defined( 'ABSPATH' ) or die( 'No script kiddies please!' );
 
 abstract class Plugin {
@@ -29,7 +31,7 @@ abstract class Plugin {
      */
 
     public static function init() {
-         include_once 'Config.php';
+         
         $main = new \ReflectionClass(get_called_class());
 
         $dir = $main->getFileName();
@@ -39,15 +41,15 @@ abstract class Plugin {
         register_deactivation_hook($dir, array($class, "deactivate"));
         register_uninstall_hook($dir, array($class, "uninstall"));
         PluginSettings::add(static::$settings);
-        ScriptsManager::init();
         PluginSettings::init();
+        Render::init(dirname($dir));
        
         foreach (static::$modules as $module => $args) {
             $module = '\Module\\' . $module;
 
             $module::init($args);
         }
-        
+        do_action('taxonomy-init');
         spl_autoload_unregister('autoload');
 
     }

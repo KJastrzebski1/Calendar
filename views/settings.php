@@ -4,8 +4,8 @@
             <form method="post" action="options.php">
                 <div class="col-6">
 
-                    <?php settings_fields('alt-calendar-settings-group'); ?>
-                    <?php do_settings_sections('alt-calendar-settings-group'); ?>
+                    <?php settings_fields('alt-calendar-settings'); ?>
+                    <?php do_settings_sections('alt-calendar-settings'); ?>
                     <?php
                     $users = get_users(array(
                         'exclude' => array(1),

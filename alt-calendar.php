@@ -13,12 +13,10 @@
 
 require_once 'alt-calendar-functions.php';
 require_once 'autoloader.php';
-include_once 'module/Settings.php';
 include_once 'module/MetaBox.php';
 
 use Gloves\Plugin;
 use Gloves\PluginMenu;
-
 use Module\MetaBox;
 use Module\Event;
 use Module\Calendar;
@@ -26,13 +24,12 @@ use Module\Calendar;
 class AltCal extends Plugin {
 
     protected static $modules = [
+        'PluginManager' => '',
         'User' => '',
         'Widget' => '',
         'Event' => '',
         'Calendar' => '',
-        //'Settings' => 'views/settings'
     ];
-    
     protected static $settings = [
         'default_calendar',
         'styling',
@@ -40,20 +37,15 @@ class AltCal extends Plugin {
     ];
 
     public static function init() {
-        
         PluginMenu::addPage('Events', 'edit.php?post_type=calendar_event');
         PluginMenu::addPage('Calendars', 'edit-tags.php?taxonomy=alt-calendar&post_type=calendar_event');
-        PluginMenu::init('views/settings');
+        PluginMenu::init('settings');
         $eventsMetaBox = new MetaBox(Event::getInstance());
-        
+
         parent::init();
-        
-        $term_id = Calendar::insertTerm('Example Calendar');
-        update_option('default_calendar', $term_id);
     }
 
     public static function activate() {
-
         $calendar_page = array(
             'post_title' => 'Alt Calendar',
             'post_status' => 'publish',
@@ -67,13 +59,7 @@ class AltCal extends Plugin {
         if (!$installed) {
             update_option('installed', 1);
 
-            $example_event = array(
-                'post_title' => 'Example Event',
-                'post_status' => 'publish',
-                'post_content' => 'Simple description',
-                'post_type' => 'calendar_event'
-            );
-            $event_id = wp_insert_post($example_event);
+            $event_id = Event::newPost('Example Event', 'Simple Description');
 
             $start = new DateTime(current_time('Y-m-d H:i'));
             $end = new DateTime(current_time('Y-m-d H:i'));
@@ -82,11 +68,11 @@ class AltCal extends Plugin {
             update_post_meta($event_id, 'end', $end);
             update_option('styling', 0);
 
-            if (!taxonomy_exists('alt-calendar')) {
-                add_new_calendar();
-            }
             wp_set_object_terms($event_id, 'Example Calendar', 'alt-calendar', true);
+            
         }
+        $term_id = Calendar::insertTerm('Example Calendar');
+        update_option('default_calendar', $term_id);
     }
 
     public static function deactivate() {
@@ -129,9 +115,9 @@ class AltCal extends Plugin {
             $user_id = $user->data->ID;
             delete_user_meta($user_id, 'user_alt_calendars');
         }
-        unregister_setting('alt-calendar-settings-group', 'default_calendar');
-        unregister_setting('alt-calendar-settings-group', 'styling');
-        unregister_setting('alt-calendar-settings-group', 'installed');
+        unregister_setting('alt-calendar-settings', 'default_calendar');
+        unregister_setting('alt-calendar-settings', 'styling');
+        unregister_setting('alt-calendar-settings', 'installed');
         delete_option('installed');
         delete_option('default_calendar');
         delete_option('styling');

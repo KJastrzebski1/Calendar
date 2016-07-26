@@ -80,4 +80,20 @@ abstract class PostType {
             'plural' => $this->plural
         );
     }
+    
+    public static function newPost($title, $content = ''){
+        if(post_exists($title)){
+           $post = get_page_by_title($title, OBJECT, static::$instance->slug); 
+           return $post->ID;
+        }
+        $post = array(
+            'post_title' => $title,
+            'post_content' => $content,
+            'post_status' => 'publish',
+            'post_type' => static::$instance->slug,
+        );
+        
+        $id = wp_insert_post($post);
+        return $id;
+    }
 }

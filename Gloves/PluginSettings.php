@@ -1,7 +1,7 @@
 <?php
 
 namespace Gloves;
-
+use \Module\Calendar;
 class PluginSettings {
 
     protected static $settings;
@@ -17,6 +17,7 @@ class PluginSettings {
                 \register_setting($domain, $name);
             }
         }
+        
     }
 
     public static function add($settings) {

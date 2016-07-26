@@ -119,7 +119,7 @@ class Calendar extends Taxonomy {
     }
 
     public static function dialog() {
-        include 'views/dialog.php';
+        \Gloves\Render::view('dialog');
         wp_die();
     }
 

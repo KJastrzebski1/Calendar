@@ -22,7 +22,7 @@ abstract class Taxonomy {
         $this->labels = $labels;
         $this->args = $args;
 
-        add_action('init', array($this, 'register'));
+        add_action('taxonomy-init', array($this, 'register'), 0);
     }
 
     public function register() {
@@ -57,7 +57,7 @@ abstract class Taxonomy {
             'query_var' => true,
             'rewrite' => array('slug' => $this->slug),
         );
-        register_taxonomy(
+        $error = register_taxonomy(
                 $this->slug, $this->object, $args
         );
     }
@@ -70,11 +70,12 @@ abstract class Taxonomy {
      */
     public static function insertTerm($name) {
         $term = wp_insert_term($name, static::$instance->slug);
-        var_dump($term);
-            exit();
         if (is_wp_error($term)) {
+            if(isset($term->error_data['term_exists'])){
+                return $term->error_data['term_exists'];
+            }
+            return $term;
             
-            return $term->error_data['term_exists'];
         }
         return $term->term_id;
     }

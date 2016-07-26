@@ -34,7 +34,7 @@ class PluginMenu {
     }
     
     public static function view(){
-        include '/../'. static::$viewDir .'.php';
+        Render::view(static::$viewDir);
     }
     
     public static function addPage($title, $link){
