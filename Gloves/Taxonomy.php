@@ -21,8 +21,8 @@ abstract class Taxonomy {
         $this->plural = strtolower($plural);
         $this->labels = $labels;
         $this->args = $args;
-
-        add_action('taxonomy-init', array($this, 'register'), 0);
+        Logger::write('Construct taxonomy: '. $taxonomy);
+        add_action('init', array($this, 'register'), 0);
     }
 
     public function register() {
@@ -60,6 +60,8 @@ abstract class Taxonomy {
         $error = register_taxonomy(
                 $this->slug, $this->object, $args
         );
+        
+        Logger::write('Registering taxonomy: '. $error);
     }
 
     /**
@@ -69,7 +71,9 @@ abstract class Taxonomy {
      * @return int term_id
      */
     public static function insertTerm($name) {
+        
         $term = wp_insert_term($name, static::$instance->slug);
+        Logger::write('Inserting term: '. serialize($term));
         if (is_wp_error($term)) {
             if(isset($term->error_data['term_exists'])){
                 return $term->error_data['term_exists'];

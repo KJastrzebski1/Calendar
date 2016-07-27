@@ -32,6 +32,7 @@ abstract class Plugin {
 
     public static function init() {
          
+        
         $main = new \ReflectionClass(get_called_class());
 
         $dir = $main->getFileName();
@@ -40,6 +41,9 @@ abstract class Plugin {
         register_activation_hook($dir, array($class, "activate"));
         register_deactivation_hook($dir, array($class, "deactivate"));
         register_uninstall_hook($dir, array($class, "uninstall"));
+        
+        Logger::init(dirname($dir).'/debug.log');
+        
         PluginSettings::add(static::$settings);
         PluginSettings::init();
         Render::init(dirname($dir));
@@ -49,12 +53,21 @@ abstract class Plugin {
 
             $module::init($args);
         }
-        do_action('taxonomy-init');
+        //do_action('taxonomy-init');
         spl_autoload_unregister('autoload');
 
     }
 
-    abstract public static function activate();
+    public static function activate(){
+        Logger::write('activate');
+        foreach (static::$modules as $module => $args) {
+            $module = '\Module\\' . $module;
+            if(method_exists($module, 'activate')){
+                $module::activate($args);
+            }
+            
+        }
+    }
 
     abstract public static function deactivate();
 

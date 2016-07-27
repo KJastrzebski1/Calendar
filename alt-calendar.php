@@ -46,6 +46,7 @@ class AltCal extends Plugin {
     }
 
     public static function activate() {
+        parent::activate();
         $calendar_page = array(
             'post_title' => 'Alt Calendar',
             'post_status' => 'publish',
@@ -71,9 +72,9 @@ class AltCal extends Plugin {
             wp_set_object_terms($event_id, 'Example Calendar', 'alt-calendar', true);
             
         }
-        $term_id = Calendar::insertTerm('Example Calendar');
-        update_option('default_calendar', $term_id);
+        
     }
+    
 
     public static function deactivate() {
         $page = get_page_by_title('Alt Calendar');

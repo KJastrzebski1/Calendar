@@ -10,6 +10,7 @@ class Calendar extends Taxonomy {
 
     public static function init() {
         static::getInstance();
+        register_activation_hook(__FILE__, array('Module\Calendar', 'activate'));
         add_action('wp_ajax_get_events', array('Module\Calendar', 'getEvents'));
         add_action('wp_ajax_nopriv_get_events', array('Module\Calendar', 'getEvents'));
 
@@ -19,7 +20,14 @@ class Calendar extends Taxonomy {
 
         add_action("delete_alt-calendar", array('Module\Calendar', 'delete'));
     }
-
+    
+    public static function activate(){
+       $instance = static::getInstance();
+       $instance->register();
+       $term_id = static::insertTerm('Example Calendar');
+        update_option('default_calendar', $term_id);
+    }
+    
     public static function getInstance() {
         if (!isset(static::$instance)) {
             static::$instance = new static('alt-calendar', 'calendar', 'calendars', 'calendar_event');

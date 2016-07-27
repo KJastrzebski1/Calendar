@@ -27,7 +27,6 @@ abstract class PostType {
         $this->plural = strtolower($plural);
         $this->labels = $labels;
         $this->args = $args;
-        
         add_action('init', array($this, 'register'));
     }
     
@@ -68,7 +67,7 @@ abstract class PostType {
             'menu_position' => 105,
             'supports' => array('title', 'editor')
         );
-
+        Logger::write('Register postType: '. $postType);
         register_post_type($postType, $dargs);
     }
     public function getSlug(){
