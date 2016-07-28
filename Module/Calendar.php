@@ -9,7 +9,7 @@ class Calendar extends Taxonomy {
     
 
     public static function init() {
-        static::getInstance();
+        static::getInstance('alt-calendar', 'calendar', 'calendars', 'calendar_event');
         register_activation_hook(__FILE__, array('Module\Calendar', 'activate'));
         add_action('wp_ajax_get_events', array('Module\Calendar', 'getEvents'));
         add_action('wp_ajax_nopriv_get_events', array('Module\Calendar', 'getEvents'));
@@ -24,16 +24,33 @@ class Calendar extends Taxonomy {
     public static function activate(){
        $instance = static::getInstance();
        $instance->register();
-       $term_id = static::insertTerm('Example Calendar');
-        update_option('default_calendar', $term_id);
+       $term_id = static::insert('Example Calendar');
+       update_option('default_calendar', $term_id);
     }
     
-    public static function getInstance() {
-        if (!isset(static::$instance)) {
-            static::$instance = new static('alt-calendar', 'calendar', 'calendars', 'calendar_event');
+    public static function uninstall() {
+        global $wpdb;
+        foreach (array('alt-calendar') as $taxonomy) {
+            // Prepare & excecute SQL
+            $terms = $wpdb->get_results($wpdb->prepare("SELECT t.*, tt.* FROM $wpdb->terms AS t INNER JOIN $wpdb->term_taxonomy AS tt ON t.term_id = tt.term_id WHERE tt.taxonomy IN ('%s') ORDER BY t.name ASC", $taxonomy));
+
+            // Delete Terms
+            if ($terms) {
+                foreach ($terms as $term) {
+                    $wpdb->delete($wpdb->term_taxonomy, array('term_taxonomy_id' => $term->term_taxonomy_id));
+                    $wpdb->delete($wpdb->terms, array('term_id' => $term->term_id));
+                }
+            }
+            // Delete Taxonomy
+            $wpdb->delete($wpdb->term_taxonomy, array('taxonomy' => $taxonomy), array('%s'));
         }
-        return static::$instance;
     }
+    
+    public static function deactivate() {
+        ;
+    }
+
+    
 
     /*
      * returns events of calendar

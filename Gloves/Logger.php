@@ -17,7 +17,14 @@ class Logger {
         $file = fopen(static::$dir, "a");
         if (is_array($log) || is_object($log)) {
             fwrite($file, serialize($log) . "\n");
-        } else {
+        }elseif( is_bool($log)){
+            if($log){
+                fwrite($file, "true\n");
+            }else{
+                fwrite($file, "false\n");
+            }
+        }
+        else {
             fwrite($file, $log . "\n");
         }
         fclose($file);

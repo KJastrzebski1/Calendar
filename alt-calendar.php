@@ -40,9 +40,8 @@ class AltCal extends Plugin {
         PluginMenu::addPage('Events', 'edit.php?post_type=calendar_event');
         PluginMenu::addPage('Calendars', 'edit-tags.php?taxonomy=alt-calendar&post_type=calendar_event');
         PluginMenu::init('settings');
-        $eventsMetaBox = new MetaBox(Event::getInstance());
-
         parent::init();
+        $eventsMetaBox = new MetaBox(Event::getInstance());
     }
 
     public static function activate() {
@@ -60,7 +59,7 @@ class AltCal extends Plugin {
         if (!$installed) {
             update_option('installed', 1);
 
-            $event_id = Event::newPost('Example Event', 'Simple Description');
+            $event_id = Event::insert('Example Event', 'Simple Description');
 
             $start = new DateTime(current_time('Y-m-d H:i'));
             $end = new DateTime(current_time('Y-m-d H:i'));
@@ -90,28 +89,7 @@ class AltCal extends Plugin {
         $users = get_users(array(
             'fields' => 'all'
         ));
-        $query = new WP_Query(array('post_type' => 'calendar_event'));
-        if ($query->have_posts()) {
-            while ($query->have_posts()) {
-                $query->the_post();
-                wp_delete_object_term_relationships($query->post->ID, 'alt-calendar');
-                wp_delete_post($query->post->ID);
-            }
-        }
-        foreach (array('alt-calendar') as $taxonomy) {
-            // Prepare & excecute SQL
-            $terms = $wpdb->get_results($wpdb->prepare("SELECT t.*, tt.* FROM $wpdb->terms AS t INNER JOIN $wpdb->term_taxonomy AS tt ON t.term_id = tt.term_id WHERE tt.taxonomy IN ('%s') ORDER BY t.name ASC", $taxonomy));
-
-            // Delete Terms
-            if ($terms) {
-                foreach ($terms as $term) {
-                    $wpdb->delete($wpdb->term_taxonomy, array('term_taxonomy_id' => $term->term_taxonomy_id));
-                    $wpdb->delete($wpdb->terms, array('term_id' => $term->term_id));
-                }
-            }
-            // Delete Taxonomy
-            $wpdb->delete($wpdb->term_taxonomy, array('taxonomy' => $taxonomy), array('%s'));
-        }
+        
         foreach ($users as $user) {
             $user_id = $user->data->ID;
             delete_user_meta($user_id, 'user_alt_calendars');

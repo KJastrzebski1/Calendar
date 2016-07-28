@@ -69,7 +69,25 @@ abstract class Plugin {
         }
     }
 
-    abstract public static function deactivate();
+    public static function deactivate(){
+        Logger::write('deactivate');
+        foreach (static::$modules as $module => $args) {
+            $module = '\Module\\' . $module;
+            if(method_exists($module, 'deactivate')){
+                $module::deactivate($args);
+            }
+            
+        }
+    }
 
-    abstract public static function uninstall();
+    public static function uninstall(){
+        Logger::write('uninstall');
+        foreach (static::$modules as $module => $args) {
+            $module = '\Module\\' . $module;
+            if(method_exists($module, 'uninstall')){
+                $module::uninstall($args);
+            }
+            
+        }
+    }
 }

@@ -6,22 +6,33 @@ use \Gloves\PostType;
 
 class Event extends PostType{
     
-
     public static function init() {
         
-        static::getInstance();
+        static::getInstance('calendar_event', 'event', 'events');
         
         add_action('wp_ajax_update_event', array('\Module\Event', 'updateEvent'));
         add_action('wp_ajax_delete_event', array('\Module\Event', 'deleteEvent'));
     }
     
-    public static function getInstance(){
-        if(!isset(static::$instance)){
-            static::$instance = new static('calendar_event', 'event', 'events');
-        }
-        return static::$instance;
-    }
+    
 
+    public static function activate() {
+        ;
+    }
+    
+    public static function deactivate() {
+        ;
+    }
+    public static function uninstall() {
+        $query = new WP_Query(array('post_type' => 'calendar_event'));
+        if ($query->have_posts()) {
+            while ($query->have_posts()) {
+                $query->the_post();
+                wp_delete_object_term_relationships($query->post->ID, 'alt-calendar');
+                wp_delete_post($query->post->ID);
+            }
+        }
+    }
 
     /*
      * Deletes event from database

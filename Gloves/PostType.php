@@ -6,6 +6,9 @@ defined( 'ABSPATH' ) or die( 'No script kiddies please!' );
 
 
 abstract class PostType {
+    
+    use Module;
+    
     protected $slug;
     protected $single;
     protected $plural;
@@ -13,6 +16,14 @@ abstract class PostType {
     protected $args;
     
     protected static $instance;
+    
+    public static function getInstance($postType = '', $single = '', $plural = '', $labels = array(), $args = array()){
+        Logger::write(static::$instance);
+        if(!isset(static::$instance)){
+            static::$instance = new static($postType , $single, $plural, $labels, $args);
+        }
+        return static::$instance;
+    }
     /**
      * 
      * @param string $single
@@ -22,6 +33,7 @@ abstract class PostType {
      * 
      */
     protected function __construct($postType , $single, $plural, $labels = array(), $args = array()) {
+        Logger::write($postType);
         $this->slug = $postType;
         $this->single = strtolower($single);
         $this->plural = strtolower($plural);
@@ -34,6 +46,7 @@ abstract class PostType {
         $plural = $this->plural;
         $single = $this->single;
         $postType = $this->slug;
+        Logger::write($postType);
         $textDomain = Config::get('text-domain');
         $dlabels = array(
             'name' => _x(ucfirst($plural), 'post type general name', $textDomain),
@@ -80,7 +93,7 @@ abstract class PostType {
         );
     }
     
-    public static function newPost($title, $content = ''){
+    public static function insert($title, $content = ''){
         if(post_exists($title)){
            $post = get_page_by_title($title, OBJECT, static::$instance->slug); 
            return $post->ID;

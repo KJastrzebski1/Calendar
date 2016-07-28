@@ -6,6 +6,8 @@ defined('ABSPATH') or die('No script kiddies please!');
 
 abstract class Taxonomy {
 
+    use Module;
+    
     protected static $instance;
     protected $slug;
     protected $object;
@@ -14,6 +16,31 @@ abstract class Taxonomy {
     protected $labels;
     protected $args;
 
+    /**
+     * 
+     * @param string $slug
+     * @param string $single
+     * @param string $plural
+     * @param string $postType
+     * @param array $labels
+     * @param array $args
+     * @return Taxonomy
+     */
+    public static function getInstance($slug = '', $single = '', $plural = '', $postType = null, $labels = array(), $args = array()) {
+        if (!isset(static::$instance)) {
+            static::$instance = new static($slug, $single, $plural, $postType, $labels, $args);
+        }
+        return static::$instance;
+    }
+    /**
+     * 
+     * @param type $taxonomy
+     * @param type $single
+     * @param type $plural
+     * @param type $object_type
+     * @param type $labels
+     * @param type $args
+     */
     protected function __construct($taxonomy, $single, $plural, $object_type = null, $labels = array(), $args = array()) {
         $this->slug = $taxonomy;
         $this->object = $object_type;
@@ -61,7 +88,7 @@ abstract class Taxonomy {
                 $this->slug, $this->object, $args
         );
         
-        Logger::write('Registering taxonomy: '. $error);
+        Logger::write('Registering taxonomy: '. $this->slug);
     }
 
     /**
@@ -70,7 +97,7 @@ abstract class Taxonomy {
      * @param string name
      * @return int term_id
      */
-    public static function insertTerm($name) {
+    public static function insert($name) {
         
         $term = wp_insert_term($name, static::$instance->slug);
         Logger::write('Inserting term: '. serialize($term));
@@ -91,8 +118,12 @@ abstract class Taxonomy {
      * @param type $arg
      * @return WP_term
      */
-    public static function getTerm($field, $arg) {
+    public static function getBy($field, $arg) {
         return get_term_by($field, $arg, static::$instance->slug);
+    }
+    
+    public static function remove(){
+        
     }
 
 }
