@@ -16,6 +16,13 @@ abstract class Plugin {
     protected static $modules;
 
     /**
+     * list of database models
+     * 
+     * @var array
+     */
+    protected static $models;
+
+    /**
      * list of settings
      * 
      * @var array
@@ -53,7 +60,13 @@ abstract class Plugin {
 
             $module::init($args);
         }
-        //do_action('taxonomy-init');
+        foreach (static::$models as $module) {
+            $module = '\Model\\' . $module;
+            
+            if(method_exists($module, 'create')){
+                $module::create();
+            }
+        }
         spl_autoload_unregister('autoload');
 
     }
@@ -67,6 +80,7 @@ abstract class Plugin {
             }
             
         }
+        
     }
 
     public static function deactivate(){
@@ -77,6 +91,13 @@ abstract class Plugin {
                 $module::deactivate($args);
             }
             
+        }
+        foreach (static::$models as $module) {
+            $module = '\Model\\' . $module;
+            Logger::write("dropping");
+            if(method_exists($module, 'drop')){
+                $module::drop();
+            }
         }
     }
 

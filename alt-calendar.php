@@ -21,6 +21,8 @@ use Module\MetaBox;
 use Module\Event;
 use Module\Calendar;
 
+use Model\Table;
+
 class AltCal extends Plugin {
 
     protected static $modules = [
@@ -29,6 +31,9 @@ class AltCal extends Plugin {
         'Widget' => '',
         'Event' => '',
         'Calendar' => '',
+    ];
+    protected static $models = [
+        'Table',
     ];
     protected static $settings = [
         'default_calendar',
@@ -42,6 +47,7 @@ class AltCal extends Plugin {
         PluginMenu::init('settings');
         parent::init();
         $eventsMetaBox = new MetaBox(Event::getInstance());
+        
     }
 
     public static function activate() {
@@ -69,13 +75,11 @@ class AltCal extends Plugin {
             update_option('styling', 0);
 
             wp_set_object_terms($event_id, 'Example Calendar', 'alt-calendar', true);
-            
         }
-        
     }
-    
 
     public static function deactivate() {
+        parent::deactivate();
         $page = get_page_by_title('Alt Calendar');
         wp_delete_post($page->ID, true);
         $event = get_page_by_title('Example Event');
@@ -85,11 +89,12 @@ class AltCal extends Plugin {
     }
 
     public static function uninstall() {
+        parent::uninstall();
         global $wpdb;
         $users = get_users(array(
             'fields' => 'all'
         ));
-        
+
         foreach ($users as $user) {
             $user_id = $user->data->ID;
             delete_user_meta($user_id, 'user_alt_calendars');
