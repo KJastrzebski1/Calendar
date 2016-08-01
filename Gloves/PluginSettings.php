@@ -1,7 +1,7 @@
 <?php
 
 namespace Gloves;
-use \Module\Calendar;
+
 class PluginSettings {
 
     protected static $settings;
@@ -19,9 +19,30 @@ class PluginSettings {
         }
         
     }
+    
+    public static function unregister(){
+        $domain = Config::get('text-domain') . '-settings';
+        if (isset(static::$settings)) {
+            foreach (static::$settings as $name) {
+                \unregister_setting($domain, $name);
+                \delete_option($name);
+            }
+        }
+    }
 
     public static function add($settings) {
-        static::$settings = $settings;
+        foreach ($settings as $option){
+            static::$settings[] = $option;
+        }
+        
+    }
+    
+    public static function get($option){
+        return \get_option($option);
+    }
+    
+    public static function set($option, $value){
+        return \update_option($option, $value);
     }
 
 }

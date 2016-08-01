@@ -4,25 +4,37 @@ namespace Module;
 
 use \Gloves\PostType;
 
-class Event extends PostType{
-    
+class Event extends PostType {
+
     public static function init() {
-        
+
         static::getInstance('calendar_event', 'event', 'events');
-        
+
         add_action('wp_ajax_update_event', array('\Module\Event', 'updateEvent'));
         add_action('wp_ajax_delete_event', array('\Module\Event', 'deleteEvent'));
     }
-    
-    
+
+    public static function activate_once() {
+        $event_id = static::insert('Example Event', 'Simple Description');
+        \Gloves\Logger::write('Insert Event: '.$event_id);
+        $start = new \DateTime(current_time('Y-m-d H:i'));
+        $end = new \DateTime(current_time('Y-m-d H:i'));
+        $end->modify('+2 hours');
+        \update_post_meta($event_id, 'start', $start);
+        \update_post_meta($event_id, 'end', $end);
+
+        \wp_set_object_terms($event_id, 'Example Calendar', 'alt-calendar', true);
+    }
 
     public static function activate() {
         ;
     }
-    
+
     public static function deactivate() {
-        ;
+        $event = get_page_by_title('Example Event');
+        wp_delete_post($event->ID, true);
     }
+
     public static function uninstall() {
         $query = new WP_Query(array('post_type' => 'calendar_event'));
         if ($query->have_posts()) {
@@ -56,22 +68,22 @@ class Event extends PostType{
 
     public static function updateEvent() {
         global $wpdb;
-        
+
         $event = $_POST["data"];
         $calendar_id = intval($_POST["calendar_id"]);
         $current_user = wp_get_current_user();
         $user_id = $current_user->ID;
         $response = [];
-        
+
         $id = intval($event['id']);
-        
+
         $title = sanitize_text_field($event['title']);
         $start = new \DateTime($event['start']);
-       
+
         $end = new \DateTime($event['start']);
-        
+
         $end->modify("+2 hours");
-        
+
         if ($event['end'] != '') {
             $end = new \DateTime($event['end']);
         }
@@ -97,7 +109,7 @@ class Event extends PostType{
                 echo $error;
             }
         }
-        
+
         if ($post_id) {
             $response = $post_id;
             update_post_meta($post_id, 'start', $start);
@@ -107,7 +119,7 @@ class Event extends PostType{
             wp_set_object_terms($post_id, intval($calendar_id), 'alt-calendar');
         }
         echo $response;
-        
+
         wp_die();
     }
 

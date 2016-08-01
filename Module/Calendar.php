@@ -22,13 +22,21 @@ class Calendar extends Taxonomy {
     }
     
     public static function activate(){
-       $instance = static::getInstance();
+       
+    }
+    public static function activate_once(){
+        $instance = static::getInstance();
        $instance->register();
        $term_id = static::insert('Example Calendar');
+       \Gloves\Logger::write($term_id);
        update_option('default_calendar', $term_id);
     }
-    
+
     public static function uninstall() {
+        
+    }
+    
+    public static function deactivate() {
         global $wpdb;
         foreach (array('alt-calendar') as $taxonomy) {
             // Prepare & excecute SQL
@@ -44,10 +52,6 @@ class Calendar extends Taxonomy {
             // Delete Taxonomy
             $wpdb->delete($wpdb->term_taxonomy, array('taxonomy' => $taxonomy), array('%s'));
         }
-    }
-    
-    public static function deactivate() {
-        ;
     }
 
     

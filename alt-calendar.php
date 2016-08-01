@@ -55,36 +55,24 @@ class AltCal extends Plugin {
             'post_type' => 'page'
         );
         wp_insert_post($calendar_page);
-        $installed = get_option('installed');
-        if (!$installed) {
-            update_option('installed', 1);
-
-            $event_id = Event::insert('Example Event', 'Simple Description');
-
-            $start = new DateTime(current_time('Y-m-d H:i'));
-            $end = new DateTime(current_time('Y-m-d H:i'));
-            $end->modify('+2 hours');
-            update_post_meta($event_id, 'start', $start);
-            update_post_meta($event_id, 'end', $end);
-            update_option('styling', 0);
-
-            wp_set_object_terms($event_id, 'Example Calendar', 'alt-calendar', true);
-            
-        }
         
     }
-    
+    public static function activate_once() {
+        parent::activate_once();
+        Gloves\PluginSettings::set('styling', 0);
+    }
 
+    
     public static function deactivate() {
+        parent::deactivate();
         $page = get_page_by_title('Alt Calendar');
         wp_delete_post($page->ID, true);
-        $event = get_page_by_title('Example Event');
-        wp_delete_post($event->ID, true);
-
+        
         flush_rewrite_rules();
     }
 
     public static function uninstall() {
+        parent::uninstall();
         global $wpdb;
         $users = get_users(array(
             'fields' => 'all'
@@ -94,12 +82,7 @@ class AltCal extends Plugin {
             $user_id = $user->data->ID;
             delete_user_meta($user_id, 'user_alt_calendars');
         }
-        unregister_setting('alt-calendar-settings', 'default_calendar');
-        unregister_setting('alt-calendar-settings', 'styling');
-        unregister_setting('alt-calendar-settings', 'installed');
-        delete_option('installed');
-        delete_option('default_calendar');
-        delete_option('styling');
+        
     }
 
 }

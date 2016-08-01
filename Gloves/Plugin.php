@@ -53,10 +53,20 @@ abstract class Plugin {
 
             $module::init($args);
         }
-        //do_action('taxonomy-init');
         spl_autoload_unregister('autoload');
 
     }
+
+    public static function activate_once(){
+        Logger::write('activate_once');
+        foreach (static::$modules as $module => $args) {
+            $module = '\Module\\' . $module;
+            if(method_exists($module, 'activate_once')){
+                $module::activate_once($args);
+            }
+            
+        }
+    } 
 
     public static function activate(){
         Logger::write('activate');
@@ -66,6 +76,10 @@ abstract class Plugin {
                 $module::activate($args);
             }
             
+        }
+        if(!PluginSettings::get('installed')){
+            static::activate_once();
+            PluginSettings::set('installed', 1);
         }
     }
 
@@ -78,6 +92,7 @@ abstract class Plugin {
             }
             
         }
+        PluginSettings::unregister();
     }
 
     public static function uninstall(){
@@ -89,5 +104,6 @@ abstract class Plugin {
             }
             
         }
+        
     }
 }

@@ -100,7 +100,7 @@ abstract class Taxonomy {
     public static function insert($name) {
         
         $term = wp_insert_term($name, static::$instance->slug);
-        Logger::write('Inserting term: '. serialize($term));
+        
         if (is_wp_error($term)) {
             if(isset($term->error_data['term_exists'])){
                 return $term->error_data['term_exists'];
@@ -108,7 +108,8 @@ abstract class Taxonomy {
             return $term;
             
         }
-        return $term->term_id;
+        Logger::write('Inserting term: '. serialize($term));
+        return $term['term_id'];
     }
 
     /**

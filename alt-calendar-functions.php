@@ -38,4 +38,4 @@ function mbe_set_current_menu($parent_file) {
     return $parent_file;
 }
 
-add_filter('parent_file', 'mbe_set_current_menu');
+//add_filter('parent_file', 'mbe_set_current_menu');

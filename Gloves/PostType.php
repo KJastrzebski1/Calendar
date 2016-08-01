@@ -108,4 +108,14 @@ abstract class PostType {
         $id = wp_insert_post($post);
         return $id;
     }
+    
+    public static function getBy($field, $value){
+        switch($field):
+        case 'title':
+            return get_page_by_title($value, OBJECT, static::$instance->slug);
+        default :
+            return false;
+        endswitch;
+        
+    }
 }
