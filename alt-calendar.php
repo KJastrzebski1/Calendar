@@ -21,6 +21,8 @@ use Module\MetaBox;
 use Module\Event;
 use Module\Calendar;
 
+use Model\Table;
+
 class AltCal extends Plugin {
 
     protected static $modules = [
@@ -29,6 +31,9 @@ class AltCal extends Plugin {
         'Widget' => '',
         'Event' => '',
         'Calendar' => '',
+    ];
+    protected static $models = [
+        'Table',
     ];
     protected static $settings = [
         'default_calendar',
@@ -42,6 +47,7 @@ class AltCal extends Plugin {
         PluginMenu::init('settings');
         parent::init();
         $eventsMetaBox = new MetaBox(Event::getInstance());
+        
     }
 
     public static function activate() {
@@ -61,7 +67,6 @@ class AltCal extends Plugin {
         parent::activate_once();
         Gloves\PluginSettings::set('styling', 0);
     }
-
     
     public static function deactivate() {
         parent::deactivate();
@@ -77,7 +82,7 @@ class AltCal extends Plugin {
         $users = get_users(array(
             'fields' => 'all'
         ));
-        
+
         foreach ($users as $user) {
             $user_id = $user->data->ID;
             delete_user_meta($user_id, 'user_alt_calendars');
