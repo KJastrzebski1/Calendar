@@ -26,11 +26,24 @@ abstract class Taxonomy {
      * @param array $args
      * @return Taxonomy
      */
-    public static function getInstance($slug = '', $single = '', $plural = '', $postType = null, $labels = array(), $args = array()) {
-        if (!isset(static::$instance)) {
-            static::$instance = new static($slug, $single, $plural, $postType, $labels, $args);
-        }
+    public static function getInstance(){
         return static::$instance;
+    }
+    
+    public static function setup($slug = '', $single = '', $plural = '', $postType = null, $labels = array(), $args = array()){
+        static::$instance = new static($slug, $single, $plural, $postType, $labels, $args);
+    }
+    public function getSlug(){
+        return $this->slug;
+    }
+    public function getPostType(){
+        return $this->object;
+    }
+    public function getName(){
+        return array(
+            'singular' => $this->single,
+            'plural' => $this->plural
+        );
     }
     /**
      * 
@@ -88,7 +101,6 @@ abstract class Taxonomy {
                 $this->slug, $this->object, $args
         );
         
-        Logger::write('Registering taxonomy: '. $this->slug);
     }
 
     /**

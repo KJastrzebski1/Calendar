@@ -8,7 +8,7 @@ class Event extends PostType {
 
     public static function init() {
 
-        static::getInstance('calendar_event', 'event', 'events');
+        static::setup('calendar_event', 'event', 'events');
 
         add_action('wp_ajax_update_event', array('\Module\Event', 'updateEvent'));
         add_action('wp_ajax_delete_event', array('\Module\Event', 'deleteEvent'));
@@ -36,7 +36,7 @@ class Event extends PostType {
     }
 
     public static function uninstall() {
-        $query = new WP_Query(array('post_type' => 'calendar_event'));
+        $query = new WP_Query(array('post_type' => static::getInstance()->slug));
         if ($query->have_posts()) {
             while ($query->have_posts()) {
                 $query->the_post();
@@ -60,7 +60,7 @@ class Event extends PostType {
     }
 
     /*
-     * updates event in database
+     * AJAX update event in database
      * 
      * @param array. Event
      * @return int. PostID of updated or added event

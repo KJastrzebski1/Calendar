@@ -17,12 +17,12 @@ abstract class PostType {
     
     protected static $instance;
     
-    public static function getInstance($postType = '', $single = '', $plural = '', $labels = array(), $args = array()){
-        Logger::write(static::$instance);
-        if(!isset(static::$instance)){
-            static::$instance = new static($postType , $single, $plural, $labels, $args);
-        }
+    public static function getInstance(){
         return static::$instance;
+    }
+    
+    public static function setup($postType = '', $single = '', $plural = '', $labels = array(), $args = array()){
+        static::$instance = new static($postType , $single, $plural, $labels, $args);
     }
     /**
      * 
@@ -33,7 +33,6 @@ abstract class PostType {
      * 
      */
     protected function __construct($postType , $single, $plural, $labels = array(), $args = array()) {
-        Logger::write($postType);
         $this->slug = $postType;
         $this->single = strtolower($single);
         $this->plural = strtolower($plural);
@@ -80,7 +79,6 @@ abstract class PostType {
             'menu_position' => 105,
             'supports' => array('title', 'editor')
         );
-        Logger::write('Register postType: '. $postType);
         register_post_type($postType, $dargs);
     }
     public function getSlug(){

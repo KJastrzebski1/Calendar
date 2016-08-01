@@ -37,23 +37,35 @@ class PluginMenu {
         }
     }
 
+    /**
+     * This filter is bad...
+     * 
+     * @global type $submenu_file
+     * @global type $current_screen
+     * @global type $pagenow
+     * @return type
+     */
     public static function filter() {
         global $submenu_file, $current_screen, $pagenow;
         $parent_file = null;
-        // Set the submenu as active/current while anywhere in your Custom Post Type (nwcm_news)
-        Logger::write($current_screen);
-        if ($current_screen->post_type == 'calendar_event') {
-            
-            if ($pagenow == 'post.php') {
-                $submenu_file = 'edit.php?post_type=' . $current_screen->post_type;
-            }
+        
+        foreach (static::$subpages as $page) {
+            Logger::write($page['type']);
+            if ($current_screen->post_type === $page['post_type']) {
+                
+                if ($pagenow == 'post.php' && $page['type'] == "PostType") {
+                    $submenu_file = $page['link'];
+                }
 
-            if ($pagenow == 'edit-tags.php') {
-                $submenu_file = 'edit-tags.php?taxonomy=alt-calendar&post_type=' . $current_screen->post_type;
-            }
+                if ($pagenow == 'edit-tags.php' && $page['type'] == "Taxonomy") {
 
-            $parent_file = static::$page['file'];
+                    $submenu_file = $page['link'];
+                }
+
+                $parent_file = static::$page['file'];
+            }
         }
+
 
         return $parent_file;
     }
@@ -62,10 +74,30 @@ class PluginMenu {
         Render::view(static::$viewDir);
     }
 
-    public static function addPage($title, $link) {
+    /**
+     * Add page based on the object of Taxonomy or PostType
+     * 
+     * @param type $title
+     * @param object $type
+     */
+    public static function addPage($title, $type) {
+        $objType;
+        $postType;
+        $link;
         $i = count(static::$subpages);
         static::$subpages[$i]['title'] = $title;
+        if ($type instanceof Taxonomy) {
+            $objType = "Taxonomy";
+            $postType = $type->getPostType();
+            $link = "edit-tags.php?taxonomy=" . $type->getSlug() . "&post_type=" . $postType;
+        } elseif ($type instanceof PostType) {
+            $objType = "PostType";
+            $postType = $type->getSlug();
+            $link = "edit.php?post_type=" . $postType;
+        }
+        static::$subpages[$i]['type'] = $objType;
         static::$subpages[$i]['link'] = $link;
+        static::$subpages[$i]['post_type'] = $postType;
     }
 
 }

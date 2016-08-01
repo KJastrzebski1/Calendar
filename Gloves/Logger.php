@@ -19,7 +19,7 @@ class Logger {
         if (WP_DEBUG === TRUE) {
             $file = fopen(static::$dir, "a");
             if (is_array($log) || is_object($log)) {
-                fwrite($file, serialize($log) . "\n");
+                fwrite($file, json_encode($log) . "\n");
             } elseif (is_bool($log)) {
                 if ($log) {
                     fwrite($file, "true\n");

@@ -9,7 +9,7 @@ class Calendar extends Taxonomy {
     
 
     public static function init() {
-        static::getInstance('alt-calendar', 'calendar', 'calendars', 'calendar_event');
+        static::setup('alt-calendar', 'calendar', 'calendars', 'calendar_event');
         register_activation_hook(__FILE__, array('Module\Calendar', 'activate'));
         add_action('wp_ajax_get_events', array('Module\Calendar', 'getEvents'));
         add_action('wp_ajax_nopriv_get_events', array('Module\Calendar', 'getEvents'));

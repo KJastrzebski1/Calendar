@@ -49,8 +49,6 @@ abstract class Plugin {
         register_deactivation_hook($dir, array($class, "deactivate"));
         register_uninstall_hook($dir, array($class, "uninstall"));
         
-        Logger::init(dirname($dir).'/debug.log');
-        
         PluginSettings::add(static::$settings);
         PluginSettings::init();
         Render::init(dirname($dir));
@@ -67,8 +65,18 @@ abstract class Plugin {
                 $module::create();
             }
         }
-        spl_autoload_unregister('autoload');
+        add_action('plugins_loaded', array($class, 'lang'));
+       // spl_autoload_unregister('autoload');
 
+    }
+    
+    public static function lang(){
+        $main = new \ReflectionClass(get_called_class());
+
+        $dir = $main->getFileName();
+        $domain = Config::get('text-domain');
+        $lang = Config::get('lang-directory');
+        load_plugin_textdomain($domain, false, $dir . '/'.$lang);
     }
 
     public static function activate_once(){
