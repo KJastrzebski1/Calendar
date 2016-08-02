@@ -1,5 +1,10 @@
 <?php
 
+include 'autoloader.php';
+//define( 'ABSPATH', dirname(__FILE__, 4) . '/' );
+include dirname(__FILE__, 4) . '/wp-config.php';
+echo "Welcome in Gloves CLI.\n";
+
 class GlovesCLI {
 
     protected $function;
@@ -7,7 +12,7 @@ class GlovesCLI {
     protected $config;
 
     public function __construct($args) {
-        $this->config = parse_ini_file('config.ini');
+        $this->config = include 'conf.php';
         if (isset($args[1])) {
             $this->function = $args[1];
             $method = $this->function;
@@ -35,15 +40,20 @@ class GlovesCLI {
     }
 
     protected function setup() {
-        $name = $this->config['name'];
+        $name = "Plugin Name: ".$this->config['name'];
+        
         $domain = $this->config['text-domain'];
         $class = str_replace(' ', '', $name);
         $slug = strtolower(str_replace(' ', '-', $name));
+        if(file_exists($slug.'.php')){
+            echo "Plugin file already exists.";
+            exit();
+        }
         $file = fopen($slug . '.php', 'w');
         $content = "<?php
 
 /*
- * Plugin Name: $name
+ * $name
  * Description: Made in Gloves
  * Author: 
  * Text Domain: $domain
@@ -85,7 +95,9 @@ $class::init();";
     }
 
     protected function make_model($arg) {
-        $file = fopen('Model\\'. $arg . '.php', 'w');
+        $class = "\\Model\\" . $arg;
+        echo "Creating Model file $class\n";
+        $file = fopen($class . '.php', 'w');
         $content = "<?php
 
 namespace Model;
@@ -101,12 +113,28 @@ class $arg extends Model{
 }";
         fwrite($file, $content);
         fclose($file);
-        $name = $this->config['name'];
-        $slug = strtolower(str_replace(' ', '-', $name));
-        $content = str_replace("protected static \$models = [", "protected static \$models = [\n        '$arg',", file_get_contents($slug . '.php'));
-        $plugin_file = fopen($slug . '.php', 'w');
-        fwrite($plugin_file, $content);
-        fclose($plugin_file);
+        echo "$class file created. Go to the file and create structure of the table. After you are finished add Model name to array in your main plugin file.";
+    }
+
+    protected function remove_model($arg) {
+        $class = "\\Model\\" . $arg;
+
+        if (class_exists($class)) {
+            echo "Dropping $class...\n";
+            $class::drop();
+        } else {
+            echo "There is no such model. $class";
+            exit();
+        }
+        echo "Table of $class dropped. Do you also want to remove file? (Y/N)";
+        $stdin = fopen('php://stdin', 'r');
+        $response = fgetc($stdin);
+        if ($response != 'Y') {
+            echo "Aborted.\n";
+            exit;
+        }
+        unlink($class.'.php');
+        echo "File $class removed.\nRemember to remove Model from array in your main plugin file.";
     }
 
 }

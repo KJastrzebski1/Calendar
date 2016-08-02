@@ -2,24 +2,11 @@
 namespace Module;
 
 use \Gloves\PostType;
+use \Gloves\AbstractMetaBox;
 
-class MetaBox {
-    protected $postType;
+class MetaBox extends AbstractMetaBox{
     
-    public function __construct(PostType $postType) {
-        $this->postType = $postType;
-        
-        add_action('add_meta_boxes', array($this, 'add'));
-        add_action('save_post', array($this, 'save'));
-        
-    }
-    public function add(){
-        $postType = $this->postType;
-        $names = $postType->getName();
-        add_meta_box($names['plural'] . '-meta-box-id', $names['singular'] . ' data', array($this, 'init'), $postType->getSlug(), 'normal', 'high');
-    }
     public function init() {
-        
         global $post;
         $values = get_post_custom($post->ID);
         $start = unserialize($values['start'][0]);
@@ -29,7 +16,6 @@ class MetaBox {
         $date_end = isset($values['end']) ? $end->format('Y-m-d') : current_time('Y-m-d');
         $time_end = isset($values['end']) ? $end->format('H:i') : date('H:i', current_time('timestamp') + 7200);
 
-        // We'll use this nonce field later on when saving.
         wp_nonce_field('my_meta_box_nonce', 'meta_box_nonce');
         ?>
 
@@ -43,7 +29,6 @@ class MetaBox {
             <input type="date" id="my_meta_box_de" name="date_end" value="<?php echo $date_end ?>" />
             <input type="time" id="my_meta_box_te" name="time_end" value="<?php echo $time_end ?>" />
         </p>
-
         <?php
     }
 

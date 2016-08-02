@@ -9,7 +9,7 @@ class Event extends PostType {
     public static function init() {
 
         static::setup('calendar_event', 'event', 'events');
-
+        static::addMetaBox('MetaBox');
         add_action('wp_ajax_update_event', array('\Module\Event', 'updateEvent'));
         add_action('wp_ajax_delete_event', array('\Module\Event', 'deleteEvent'));
     }

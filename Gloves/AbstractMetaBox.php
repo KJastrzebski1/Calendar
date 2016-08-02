@@ -4,7 +4,7 @@ namespace Gloves;
 
 defined('ABSPATH') or die('No script kiddies please!');
 
-abstract class abstractMetaBox {
+abstract class AbstractMetaBox {
     protected $postType;
 
     public function __construct(PostType $postType) {

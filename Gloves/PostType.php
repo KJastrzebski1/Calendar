@@ -14,7 +14,9 @@ abstract class PostType {
     protected $plural;
     protected $labels;
     protected $args;
-    
+    protected $metaBoxe;
+
+
     protected static $instance;
     
     public static function getInstance(){
@@ -39,6 +41,13 @@ abstract class PostType {
         $this->labels = $labels;
         $this->args = $args;
         add_action('init', array($this, 'register'));
+    }
+    
+    public static function addMetaBox($metaBox){
+        if(!class_exists($metaBox)){
+            $metaBox = '\\Module\\'.$metaBox;
+        }
+        static::$instance->metaBox = new $metaBox(static::$instance);
     }
     
     public function register() {

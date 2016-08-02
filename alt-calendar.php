@@ -12,12 +12,10 @@
  */
 
 require_once 'autoloader.php';
-include_once 'module/MetaBox.php';
 
 use Gloves\Logger;
 use Gloves\Plugin;
 use Gloves\PluginMenu;
-use Module\MetaBox;
 use Module\Event;
 use Module\Calendar;
 
@@ -32,7 +30,7 @@ class AltCal extends Plugin {
         'Calendar' => '',
     ];
     protected static $models = [
-        'Table',
+        
     ];
     protected static $settings = [
         'default_calendar',
@@ -45,7 +43,7 @@ class AltCal extends Plugin {
         PluginMenu::addPage('Events', Event::getInstance());
         PluginMenu::addPage('Calendars', Calendar::getInstance());
         PluginMenu::init('settings');
-        $eventsMetaBox = new MetaBox(Event::getInstance());
+        
     }
 
     public static function activate() {
