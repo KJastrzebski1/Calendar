@@ -1,8 +1,6 @@
 <?php
 namespace Module;
 
-use \Gloves\Config;
-
 class PluginManager extends \Gloves\ScriptsManager{
 
     public static function loadAdmin() {
@@ -15,8 +13,7 @@ class PluginManager extends \Gloves\ScriptsManager{
     }
 
     public static function load() {
-        //echo static::getAssetsUrl('fullcalendar/fullcalendar.min.css');
-        //exit();
+        
         wp_deregister_script('jquery');
         wp_enqueue_style('fullCalendar_lib_css', static::getAssetsUrl('fullcalendar/fullcalendar.min.css', __FILE__));
         wp_enqueue_style('event_panel', static::getAssetsUrl('css/event.css', __FILE__));
@@ -47,7 +44,5 @@ class PluginManager extends \Gloves\ScriptsManager{
         wp_enqueue_script('fc_gcal', static::getAssetsUrl('fullcalendar/gcal.js', __FILE__), ['fullCalendar_lib']);
     }
     
-    protected static function getAssetsUrl($path){
-        return plugins_url('../'.Config::get('assets-directory').'/'.$path, __FILE__);
-    }
+    
 }

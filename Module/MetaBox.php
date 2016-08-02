@@ -1,7 +1,6 @@
 <?php
 namespace Module;
 
-use \Gloves\PostType;
 use \Gloves\AbstractMetaBox;
 
 class MetaBox extends AbstractMetaBox{

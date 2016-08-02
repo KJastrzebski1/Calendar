@@ -40,7 +40,7 @@ class PluginMenu {
     }
 
     /**
-     * This filter is bad...
+     * 
      * 
      * @global type $submenu_file
      * @global type $current_screen

@@ -1,8 +1,7 @@
 <?php
-
-include 'autoloader.php';
-//define( 'ABSPATH', dirname(__FILE__, 4) . '/' );
 include dirname(__FILE__, 4) . '/wp-config.php';
+include 'autoloader.php';
+
 echo "Welcome in Gloves CLI.\n";
 
 class GlovesCLI {
@@ -12,7 +11,7 @@ class GlovesCLI {
     protected $config;
 
     public function __construct($args) {
-        $this->config = include 'conf.php';
+        $this->config = include __DIR__.'/conf.php';
         if (isset($args[1])) {
             $this->function = $args[1];
             $method = $this->function;
@@ -39,8 +38,12 @@ class GlovesCLI {
         }
     }
 
+    /**
+     * Creates main plugin file based on data from conf.php
+     */
     protected function setup() {
-        $name = "Plugin Name: ".$this->config['name'];
+        $name = $this->config['name'];
+        $title = "Plugin Name: ".$name;
         
         $domain = $this->config['text-domain'];
         $class = str_replace(' ', '', $name);
@@ -53,7 +56,7 @@ class GlovesCLI {
         $content = "<?php
 
 /*
- * $name
+ * $title
  * Description: Made in Gloves
  * Author: 
  * Text Domain: $domain
@@ -94,10 +97,18 @@ $class::init();";
         fclose($file);
     }
 
-    protected function make_model($arg) {
-        $class = "\\Model\\" . $arg;
+    /**
+     * Creates model based on argument in command-line
+     * 
+     * @param string $arg
+     */
+    protected function make_model($name) {
+        $class = "Model\\" . $name;
         echo "Creating Model file $class\n";
         $file = fopen($class . '.php', 'w');
+        if(!$file){
+            exit("Couldn't create $class.");
+        }
         $content = "<?php
 
 namespace Model;
@@ -116,8 +127,13 @@ class $arg extends Model{
         echo "$class file created. Go to the file and create structure of the table. After you are finished add Model name to array in your main plugin file.";
     }
 
-    protected function remove_model($arg) {
-        $class = "\\Model\\" . $arg;
+    /**
+     * Removes model with name
+     * 
+     * @param string $name
+     */
+    protected function remove_model($name) {
+        $class = "Model\\" . $name;
 
         if (class_exists($class)) {
             echo "Dropping $class...\n";
@@ -133,7 +149,9 @@ class $arg extends Model{
             echo "Aborted.\n";
             exit;
         }
-        unlink($class.'.php');
+        if(!unlink($class.'.php')){
+            exit("Couldn't remove file $class.php.");
+        }
         echo "File $class removed.\nRemember to remove Model from array in your main plugin file.";
     }
 

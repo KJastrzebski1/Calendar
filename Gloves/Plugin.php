@@ -66,7 +66,6 @@ abstract class Plugin {
             }
         }
         add_action('plugins_loaded', array($class, 'lang'));
-       // spl_autoload_unregister('autoload');
 
     }
     
