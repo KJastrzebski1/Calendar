@@ -17,17 +17,17 @@ class MetaBox {
         $postType = $this->postType;
         $names = $postType->getName();
         add_meta_box($names['plural'] . '-meta-box-id', $names['singular'] . ' data', array($this, 'init'), $postType->getSlug(), 'normal', 'high');
-        
-        
     }
     public function init() {
-        // $post is already set, and contains an object: the WordPress post
+        
         global $post;
         $values = get_post_custom($post->ID);
-        $date_start = isset($values['date_start']) ? $start->format('Y-m-d') : current_time('Y-m-d');
-        $time_start = isset($values['time_start']) ? $start->format('H:i') : current_time('H:i');
-        $date_end = isset($values['date_end']) ? $end->format('Y-m-d') : current_time('Y-m-d');
-        $time_end = isset($values['time_end']) ? $end->format('H:i') : date('H:i', current_time('timestamp') + 7200);
+        $start = unserialize($values['start'][0]);
+        $end = unserialize($values['end'][0]);
+        $date_start = isset($values['start']) ? $start->format('Y-m-d') : current_time('Y-m-d');
+        $time_start = isset($values['start']) ? $start->format('H:i') : current_time('H:i');
+        $date_end = isset($values['end']) ? $end->format('Y-m-d') : current_time('Y-m-d');
+        $time_end = isset($values['end']) ? $end->format('H:i') : date('H:i', current_time('timestamp') + 7200);
 
         // We'll use this nonce field later on when saving.
         wp_nonce_field('my_meta_box_nonce', 'meta_box_nonce');

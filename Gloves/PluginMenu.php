@@ -2,6 +2,8 @@
 
 namespace Gloves;
 
+defined('ABSPATH') or die('No script kiddies please!');
+
 class PluginMenu {
 
     protected static $viewDir;
@@ -48,11 +50,11 @@ class PluginMenu {
     public static function filter() {
         global $submenu_file, $current_screen, $pagenow;
         $parent_file = null;
-        
+
         foreach (static::$subpages as $page) {
             Logger::write($page['type']);
             if ($current_screen->post_type === $page['post_type']) {
-                
+
                 if ($pagenow == 'post.php' && $page['type'] == "PostType") {
                     $submenu_file = $page['link'];
                 }

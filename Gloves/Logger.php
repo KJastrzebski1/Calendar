@@ -2,6 +2,8 @@
 
 namespace Gloves;
 
+defined( 'ABSPATH' ) or die( 'No script kiddies please!' );
+
 class Logger {
 
     protected static $dir;

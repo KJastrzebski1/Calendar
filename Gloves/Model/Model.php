@@ -2,6 +2,8 @@
 
 namespace Gloves\Model;
 
+defined('ABSPATH') or die('No script kiddies please!');
+
 abstract class Model {
 
     /**
@@ -47,22 +49,23 @@ abstract class Model {
         $wpdb->query($sql);
         \delete_option($tableName . '_version');
     }
-    
-    public static function getBy($field, $value){
+
+    public static function getBy($field, $value) {
         global $wpdb;
-        
+
         $tableName = static::$tableName;
-        
+
         $sql = "SELECT * FROM $tableName WHERE $field = '$value'";
         $row = $wpdb->get_results($sql, OBJECT);
-        
+
         return $row;
     }
 
-    public static function insert($data){
+    public static function insert($data) {
         global $wpdb;
         $tableName = static::$tableName;
         $wpdb->insert($tableName, $data);
         return $wpdb->insert_id;
     }
+
 }

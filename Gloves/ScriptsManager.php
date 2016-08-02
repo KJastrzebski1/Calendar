@@ -2,6 +2,8 @@
 
 namespace Gloves;
 
+defined('ABSPATH') or die('No script kiddies please!');
+
 abstract class ScriptsManager {
 
     protected static $instance;
@@ -28,5 +30,4 @@ abstract class ScriptsManager {
     abstract static function loadAdmin();
 
     abstract static function load();
-
 }
