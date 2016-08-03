@@ -3,7 +3,10 @@
 namespace Gloves;
 
 defined('ABSPATH') or die('No script kiddies please!');
-
+/**
+ * Manages plugin options
+ * 
+ */
 class PluginSettings {
 
     protected static $settings;
@@ -12,6 +15,9 @@ class PluginSettings {
         add_action('admin_init', array('\Gloves\PluginSettings', 'register'));
     }
 
+    /**
+     * On admin_init hook
+     */
     public static function register() {
         $domain = Config::get('text-domain') . '-settings';
         if (isset(static::$settings)) {
@@ -21,6 +27,9 @@ class PluginSettings {
         }
     }
 
+    /**
+     * On plugin deactivation
+     */
     public static function unregister() {
         $domain = Config::get('text-domain') . '-settings';
         if (isset(static::$settings)) {
@@ -31,7 +40,12 @@ class PluginSettings {
         }
     }
 
-    public static function add($settings) {
+    /**
+     * Adds array of settings
+     * 
+     * @param array $settings
+     */
+    public static function add(array $settings) {
         foreach ($settings as $option) {
             static::$settings[] = $option;
         }

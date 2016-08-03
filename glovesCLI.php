@@ -1,6 +1,10 @@
 <?php
 include dirname(__FILE__, 4) . '/wp-config.php';
 include 'autoloader.php';
+if (PHP_SAPI !== 'cli') {
+    echo 'Nope.';
+    exit();
+}
 
 echo "Welcome in Gloves CLI.\n";
 
@@ -17,7 +21,8 @@ class GlovesCLI {
             $method = $this->function;
             if (method_exists($this, $method)) {
                 $arg = isset($args[2]) ? $args[2] : null;
-                $this->$method($arg);
+                $arg2 = isset($args[3]) ? str_replace('-', '', $args[3]) : null;
+                $this->$method($arg, $arg2);
             } else {
                 $this->help();
             }
@@ -26,9 +31,12 @@ class GlovesCLI {
         }
     }
 
+    /**
+     * Shows help for CLI
+     */
     private function help() {
         $methods = get_class_methods(__CLASS__);
-        echo "\nTry use function from below: \n";
+        echo "\nTry use functions from below: \n";
 
         foreach ($methods as $method) {
             if ($method == "__construct") {
@@ -52,6 +60,7 @@ class GlovesCLI {
             echo "Plugin file already exists.";
             exit();
         }
+        echo "Creating $name plugin.\n";
         $file = fopen($slug . '.php', 'w');
         $content = "<?php
 
@@ -65,6 +74,7 @@ class GlovesCLI {
  * License: GPL3
  * 
  */
+include 'autoloader.php';
 
 use Gloves\Plugin;
 
@@ -98,13 +108,44 @@ $class::init();";
     }
 
     /**
+     * Creates Module based on template from Gloves\Template
+     * 
+     * @param string $name
+     * @param string $template
+     */
+    protected function make_module($name, $template = 'standard'){
+        
+        echo "Creating Module based on $template.\n";
+        
+        $template = "Gloves\\Template\\".ucfirst(strtolower($template)).'.php';
+        
+        
+        if(!file_exists($template)){
+            echo ("Template doesn't exist.\n");
+            echo "Try using one from below. \n";
+            $content = scandir(dirname($template));
+            foreach ($content as $file){
+                if($file == ".." || $file == "."){
+                    continue;
+                }
+                echo "\t-".str_replace(".php", '', $file)."\n";
+            }
+            exit();
+        }
+        $dest = "Module\\$name.php";
+        if(!copy($template, $dest)){
+            echo "Couldn't copy template.";
+        }
+    }
+
+    /**
      * Creates model based on argument in command-line
      * 
-     * @param string $arg
+     * @param string $name
      */
     protected function make_model($name) {
         $class = "Model\\" . $name;
-        echo "Creating Model file $class\n";
+        echo "Creating Model file $class...\n";
         $file = fopen($class . '.php', 'w');
         if(!$file){
             exit("Couldn't create $class.");
