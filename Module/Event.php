@@ -23,7 +23,7 @@ class Event extends PostType {
         \update_post_meta($event_id, 'start', $start);
         \update_post_meta($event_id, 'end', $end);
 
-        \wp_set_object_terms($event_id, 'Example Calendar', 'alt-calendar', true);
+        wp_set_object_terms($event_id, 'Example Calendar', 'alt-calendar', true);
     }
 
     public static function activate() {
