@@ -125,10 +125,10 @@ abstract class PostType {
     /**
      * WP_Query based method. See codex for field names.
      * 
-     * @param type $field
+     * @param string $field
      * @param type $value
-     * @param type $orderby
-     * @return type
+     * @param string $orderby
+     * @return array of WP_Posts
      */
     public static function getBy($field, $value, $orderby = 'date') {
         $args = array(

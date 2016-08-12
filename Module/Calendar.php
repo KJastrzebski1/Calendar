@@ -28,7 +28,8 @@ class Calendar extends Taxonomy {
         $instance = static::getInstance();
        $instance->register();
        $term_id = static::insert('Example Calendar');
-       \Gloves\Logger::write($term_id);
+       $event_id = Event::getBy("name", "Example Event");
+       \wp_set_object_terms($event_id[0]->ID, array(intval($term_id)), 'alt-calendar', true);
        update_option('default_calendar', $term_id);
     }
 

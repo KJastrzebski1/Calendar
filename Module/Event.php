@@ -22,8 +22,7 @@ class Event extends PostType {
         $end->modify('+2 hours');
         \update_post_meta($event_id, 'start', $start);
         \update_post_meta($event_id, 'end', $end);
-
-        wp_set_object_terms($event_id, 'Example Calendar', 'alt-calendar', true);
+        flush_rewrite_rules(true);
     }
 
     public static function activate() {
@@ -31,8 +30,8 @@ class Event extends PostType {
     }
 
     public static function deactivate() {
-        $event = get_page_by_title('Example Event');
-        wp_delete_post($event->ID, true);
+        $event = static::getBy('name', 'Example Event');
+        wp_delete_post($event[0]->ID, true);
     }
 
     public static function uninstall() {
